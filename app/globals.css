@@ -1,0 +1,45 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+}
+
+/* Default Light Mode (Cream Paper feel) */
+body {
+  color: #1A1A1A;
+  background: #FAFAFA;
+}
+
+/* Dark Mode Overrides */
+.dark body {
+  color: #FAFAFA;
+  background: #121212;
+}
+
+/* Hide Scrollbar for Web Stories */
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
+}
+.scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+/* Smooth Image Loading */
+img {
+  transition: opacity 0.3s ease-in-out;
+}
+
+/* HIDE GOOGLE TRANSLATE BANNER */
+.skiptranslate {
+  display: none !important;
+}
+body {
+  top: 0 !important;
+}
+/* Ensure our hidden div stays hidden */
+#google_translate_element {
+  display: none;
+}
