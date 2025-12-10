@@ -1,15 +1,22 @@
-import { createClient } from "next-sanity";
-import imageUrlBuilder from "@sanity/image-url";
+import { createClient } from 'next-sanity'
+import imageUrlBuilder from '@sanity/image-url'
 
+// 1. HARDCODED CONFIGURATION (Bypasses the missing file error)
+export const projectId = 'uh81euwc'
+export const dataset = 'production'
+export const apiVersion = '2024-01-01'
+
+// 2. CREATE CLIENT
 export const client = createClient({
-  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
-  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET,
-  apiVersion: "2024-01-01",
-  useCdn: false, // Set to false so you see updates instantly
-});
+  projectId,
+  dataset,
+  apiVersion,
+  useCdn: true, 
+})
 
-const builder = imageUrlBuilder(client);
+// 3. HELPER FOR IMAGES
+const builder = imageUrlBuilder(client)
 
 export function urlFor(source: any) {
-  return builder.image(source);
+  return builder.image(source)
 }
