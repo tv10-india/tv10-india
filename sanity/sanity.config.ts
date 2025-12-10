@@ -12,7 +12,10 @@ export default defineConfig({
   projectId,
   dataset,
 
-  plugins: [structureTool({structure}), visionTool({defaultApiVersion: apiVersion})],
+  plugins: [
+    structureTool({structure}), 
+    visionTool({defaultApiVersion: apiVersion})
+  ],
 
   schema,
 })
