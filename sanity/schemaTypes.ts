@@ -10,7 +10,7 @@ import post from './schemaTypes/post'
 export const schema: { types: SchemaTypeDefinition[] } = {
   types: [
     post,
-    category,
+    // category,
     // author,
     // blockContent,
   ],
