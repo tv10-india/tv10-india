@@ -37,6 +37,7 @@ export default defineType({
           {title: 'Sports', value: 'sports'},
           {title: 'Videos', value: 'videos'},
           { title: 'Mystery (Adbhut)', value: 'mystery' },
+          { title: 'Lifestyle', value: 'lifestyle' },
         ],
       },
     }),
