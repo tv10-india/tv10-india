@@ -1,4 +1,4 @@
-import { client, urlFor } from "@/lib/sanity";
+import { client, urlFor } from "../../../sanityStudio/lib/sanity";
 import { PortableText } from "@portabletext/react";
 import Image from "next/image";
 import Header from "@/components/Header";
