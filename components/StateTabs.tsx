@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { urlFor } from "@/lib/sanity";
+import { urlFor } from "../sanityStudio/lib/sanity";
 import { FaMapMarkerAlt } from "react-icons/fa";
 
 export default function StateTabs({ news }: { news: any[] }) {

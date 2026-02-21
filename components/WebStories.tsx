@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { urlFor } from "@/lib/sanity";
+import { urlFor } from "../sanityStudio/lib/sanity";
 import { FaBolt } from "react-icons/fa";
 import Link from "next/link";
 

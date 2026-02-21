@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { urlFor } from "@/lib/sanity";
+import { urlFor } from "../sanityStudio/lib/sanity";
 import { FaPlay, FaClock, FaBolt } from "react-icons/fa";
 
 export default function HeroSection({ news }: { news: any[] }) {

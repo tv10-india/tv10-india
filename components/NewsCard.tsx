@@ -3,7 +3,7 @@
 import { useRef, useState } from "react";
 import html2canvas from "html2canvas";
 import { FaWhatsapp, FaSpinner, FaExclamationTriangle } from "react-icons/fa";
-import { urlFor } from "@/lib/sanity";
+import { urlFor } from "../sanityStudio/lib/sanity";
 
 export default function NewsCard({ post }: { post: any }) {
   const cardRef = useRef<HTMLDivElement>(null);

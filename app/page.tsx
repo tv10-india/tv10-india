@@ -1,4 +1,4 @@
-import { client } from "@/lib/sanity";
+import { client } from "../sanityStudio/lib/sanity";
 import Header from "@/components/Header";
 import HeroSection from "@/components/HeroSection";
 import StateTabs from "@/components/StateTabs";
