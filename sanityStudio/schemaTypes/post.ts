@@ -38,6 +38,7 @@ export default defineType({
           {title: 'Videos', value: 'videos'},
           { title: 'Mystery (Adbhut)', value: 'mystery' },
           { title: 'Lifestyle', value: 'lifestyle' },
+          { title: 'Web Stories', value: 'web-stories' },
         ],
       },
     }),
