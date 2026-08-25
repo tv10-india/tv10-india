@@ -10,26 +10,35 @@ const categoryMap: { [key: string]: string } = {
   "uttar-pradesh": "up",
   "uttarakhand": "uk",
   "delhi": "delhi",
+  "national": "national",
+  "world": "world",
   "dharma": "dharma",
   "business": "business",
   "sports": "sports",
   "videos": "videos"
 };
 
+// National combines every state category into one feed
+const NATIONAL_CODES = ["up", "uk", "delhi", "national"];
+
 async function getCategoryNews(category: string, page: number) {
   const dbCode = categoryMap[category] || category;
   const start = (page - 1) * POSTS_PER_PAGE;
   const end = start + POSTS_PER_PAGE;
 
+  const filter = dbCode === "national"
+    ? "category in $dbCodes"
+    : "category == $dbCode";
+
   const query = `
     {
-      "posts": *[_type == "post" && category == $dbCode] | order(publishedAt desc) [$start...$end] {
+      "posts": *[_type == "post" && ${filter}] | order(publishedAt desc) [$start...$end] {
         title, slug, mainImage, publishedAt, category
       },
-      "total": count(*[_type == "post" && category == $dbCode])
+      "total": count(*[_type == "post" && ${filter}])
     }
   `;
-  return client.fetch(query, { dbCode, start, end });
+  return client.fetch(query, { dbCode, dbCodes: NATIONAL_CODES, start, end });
 }
 
 type Props = {
@@ -58,7 +67,7 @@ export default async function CategoryPage({ params, searchParams }: Props) {
         {/* PAGE TITLE (Centered) */}
         <div className="flex flex-col items-center mb-10 border-b-4 border-tv10-red pb-4 max-w-2xl mx-auto text-center">
           <h1 className="text-4xl md:text-5xl font-black uppercase text-tv10-metal dark:text-white tracking-tighter mb-2">
-            {categoryName.replace('-', ' ')} News
+            {categoryName.replace(/-/g, ' ')} News
           </h1>
           <span className="text-sm text-gray-500 font-bold bg-gray-200 dark:bg-gray-800 px-3 py-1 rounded-full">
             Page {currentPage} of {totalPages}
