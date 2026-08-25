@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -8,6 +8,10 @@ import LanguageToggle from "@/components/LanguageToggle";
 import { client } from "@/sanityStudio/lib/sanity";
 
 type Headline = { title: string; slug: string };
+const fallbackHeadline: Headline = {
+  title: "BREAKING: Welcome to TV10 India | Latest News Updates",
+  slug: "",
+};
 
 export default function Header() {
   const router = useRouter();
@@ -16,7 +20,6 @@ export default function Header() {
   const [searchQuery, setSearchQuery] = useState("");
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const [headlines, setHeadlines] = useState<Headline[]>([]);
-  const [headlineIndex, setHeadlineIndex] = useState(0);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -50,13 +53,8 @@ export default function Header() {
       .catch(() => {});
   }, []);
 
-  useEffect(() => {
-    if (headlines.length <= 1) return;
-    const rollInterval = setInterval(() => {
-      setHeadlineIndex((i) => (i + 1) % headlines.length);
-    }, 4000);
-    return () => clearInterval(rollInterval);
-  }, [headlines]);
+  const tickerHeadlines = headlines.length > 0 ? headlines : [fallbackHeadline];
+  const scrollingHeadlines = [...tickerHeadlines, ...tickerHeadlines];
 
   const toggleTheme = () => {
     if (darkMode) {
@@ -200,19 +198,19 @@ export default function Header() {
       <div className="bg-tv10-gold text-tv10-metal text-xs font-bold py-1.5 px-4 flex items-center gap-3 border-b border-amber-600/40">
         <span className="shrink-0 bg-black/10 px-2 py-0.5 rounded uppercase tracking-wider">🔴 Latest</span>
         <div className="flex-1 overflow-hidden relative h-4">
-          {headlines.length > 0 ? (
-            <Link
-              key={headlineIndex}
-              href={`/news/${headlines[headlineIndex].slug}`}
-              className="absolute inset-0 flex items-center whitespace-nowrap font-semibold hover:underline animate-fadeIn"
-            >
-              🔴 {headlines[headlineIndex].title}
-            </Link>
-          ) : (
-            <div className="whitespace-nowrap animate-ticker inline-block font-semibold">
-               🔴 BREAKING: Welcome to TV10 India — Your Choice Your Voice | Latest News Updates
-            </div>
-          )}
+          <div className="ticker-track">
+            {scrollingHeadlines.map((headline, index) => {
+              const content = <span className="ticker-item">🔴 {headline.title}</span>;
+              if (!headline.slug) {
+                return <span key={`${headline.title}-${index}`}>{content}</span>;
+              }
+              return (
+                <Link key={`${headline.slug}-${index}`} href={`/news/${headline.slug}`} className="hover:underline">
+                  {content}
+                </Link>
+              );
+            })}
+          </div>
         </div>
       </div>
     </header>
