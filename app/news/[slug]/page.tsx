@@ -6,7 +6,8 @@ import Link from "next/link";
 import AdBanner from "@/components/AdBanner"; 
 import AudioPlayer from "@/components/AudioPlayer";
 import NewsCard from "@/components/NewsCard"; // Ensure this is imported
-import { FaYoutube, FaWhatsapp, FaShareAlt, FaClock, FaFire, FaLayerGroup } from "react-icons/fa";
+import WhatsAppShareButton from "@/components/WhatsAppShareButton";
+import { FaYoutube, FaClock, FaFire, FaLayerGroup } from "react-icons/fa";
 
 // 1. RICH TEXT STYLING
 const RichTextComponents = {
@@ -156,9 +157,7 @@ export default async function ArticlePage({ params }: Props) {
                  <FaClock /> {new Date(post.publishedAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}
                </div>
                <div className="flex gap-2">
-                 <button className="bg-[#25D366] text-white px-3 py-1.5 rounded-full text-xs font-bold flex items-center gap-2 hover:bg-green-600 transition">
-                     <FaWhatsapp className="text-sm" /> Share
-                 </button>
+                 <WhatsAppShareButton title={post.title} slug={post.slug?.current || ""} />
                </div>
             </div>
 
