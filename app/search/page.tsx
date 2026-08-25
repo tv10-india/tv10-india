@@ -5,13 +5,36 @@ import Header from "@/components/Header";
 import { FaSearch } from "react-icons/fa";
 
 async function searchNews(query: string) {
-  if (!query) return [];
+  const normalizedQuery = query.trim();
+  if (!normalizedQuery) return [];
   const groqQuery = `
-    *[_type == "post" && (title match $searchTerm || category match $searchTerm)] | order(publishedAt desc) [0...20] {
+    *[
+      _type == "post" &&
+      (
+        title match $searchTerm ||
+        category match $searchTerm ||
+        slug.current match $searchTerm ||
+        select(
+          category == "up" => "uttar pradesh",
+          category == "uk" => "uttarakhand",
+          category == "delhi" => "delhi",
+          category == "national" => "national",
+          category == "world" => "world",
+          category == "dharma" => "dharma",
+          category == "business" => "business",
+          category == "sports" => "sports",
+          category == "videos" => "videos",
+          category == "mystery" => "mystery adbhut",
+          category == "lifestyle" => "lifestyle",
+          category == "web-stories" => "web stories",
+          ""
+        ) match $searchTerm
+      )
+    ] | order(publishedAt desc) [0...20] {
       title, slug, mainImage, publishedAt, category
     }
   `;
-  return client.fetch(groqQuery, { searchTerm: `*${query}*` });
+  return client.fetch(groqQuery, { searchTerm: `*${normalizedQuery}*` });
 }
 
 type Props = {
