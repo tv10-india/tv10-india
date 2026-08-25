@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import Image from "next/image";
 import { urlFor } from "../sanityStudio/lib/sanity";
 import { FaOm, FaStar } from "react-icons/fa";
@@ -35,7 +35,7 @@ export default function DharmaSection({ news }: { news: any[] }) {
           <div className="flex items-center gap-3">
              <div>
                <h3 className="text-3xl font-black tracking-tight uppercase text-tv10-gold drop-shadow-md">Dharma & Sanskriti</h3>
-               <p className="text-xs text-gray-400 tracking-widest font-medium">The Spiritual Soul of Bharat</p>
+               <p className="text-xs text-gray-400 tracking-widest font-medium">Dharma & Culture News</p>
              </div>
           </div>
           <Link href="/dharma" className="hidden md:block border border-tv10-gold/50 text-tv10-gold px-6 py-2 rounded-full text-xs font-bold hover:bg-tv10-gold hover:text-black transition duration-300">

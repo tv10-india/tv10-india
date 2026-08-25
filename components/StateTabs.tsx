@@ -29,6 +29,17 @@ export default function StateTabs({ news }: { news: any[] }) {
       // Allows: "delhi", "Delhi NCR"
       match: ["delhi", "delhi ncr", "new delhi"] 
     },
+    {
+      id: "national",
+      label: "National",
+      // Union of all state categories + explicit "national" tag
+      match: ["up", "uttar pradesh", "uttar-pradesh", "uk", "uttarakhand", "delhi", "delhi ncr", "new delhi", "national"]
+    },
+    {
+      id: "world",
+      label: "World",
+      match: ["world", "international"]
+    },
   ];
 
   // 1. Get the current active tab definition
@@ -39,7 +50,7 @@ export default function StateTabs({ news }: { news: any[] }) {
     // Convert DB category to lowercase to avoid Case Sensitive errors
     const dbCategory = item.category ? item.category.toLowerCase() : "";
     return currentTab?.match.includes(dbCategory);
-  }).slice(0, 3);
+  }).slice(0, activeState === "national" ? 6 : 3);
 
   return (
     <section className="container mx-auto px-4 py-12">
@@ -70,7 +81,7 @@ export default function StateTabs({ news }: { news: any[] }) {
       </div>
 
       {/* NEWS CARDS GRID */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 animate-fadeIn">
+      <div className={`grid grid-cols-1 md:grid-cols-3 ${activeState === "national" ? "lg:grid-cols-6" : ""} gap-8 animate-fadeIn`}>
         
         {filteredNews.length > 0 ? (
           filteredNews.map((story) => (

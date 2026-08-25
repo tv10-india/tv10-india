@@ -1,53 +1,53 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { FaFacebookF, FaTwitter, FaYoutube, FaInstagram, FaArrowUp, FaEnvelope, FaMapMarkerAlt, FaPhone } from "react-icons/fa";
 
 export default function Footer() {
-  
+
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
-    <footer className="bg-[#1a1a1a] text-gray-300 pt-16 pb-8 relative mt-0 border-t-4 border-tv10-gold">
-      
+    <footer className="bg-gradient-to-b from-[#1a1a1a] to-[#0d0d0d] text-gray-300 pt-16 pb-8 relative mt-0 border-t-4 border-tv10-gold">
+
       <div className="container mx-auto px-4">
-        
+
         {/* MAIN GRID */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
-          
-          {/* COLUMN 1: BRAND INFO */}
+
+          {/* COLUMN 1: BRAND */}
           <div>
             <div className="flex items-center gap-3 mb-6">
-               <div className="h-12 w-12 rounded-full overflow-hidden border-2 border-white/20">
+               <div className="h-12 w-12 rounded-full overflow-hidden border-2 border-tv10-gold/50 shadow-lg">
                   <img src="/logo.png" alt="TV10" className="object-cover w-full h-full" />
                </div>
                <div>
                  <h2 className="text-2xl font-black text-white leading-none tracking-tighter">TV10 INDIA</h2>
-                 <p className="text-[10px] text-tv10-gold font-bold uppercase tracking-widest">The Spiritual Voice</p>
+                 <p className="text-[10px] text-tv10-gold font-bold uppercase tracking-[0.2em]">Your Choice Your Voice</p>
                </div>
             </div>
             <p className="text-sm leading-relaxed text-gray-400 mb-6">
-              TV10 India is Bharat's leading digital news platform dedicated to bringing you the truth from Uttar Pradesh, Uttarakhand, and the world of Dharma.
+              TV10 India is a leading digital news platform delivering trusted, fast, and unbiased news from Uttar Pradesh, Uttarakhand, Delhi, and across India.
             </p>
-            <div className="flex gap-4">
-              <a href="#" className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-[#1877F2] hover:text-white transition duration-300">
+            <div className="flex gap-3">
+              <a href="#" className="w-10 h-10 rounded-full bg-gray-800/80 flex items-center justify-center hover:bg-[#1877F2] hover:text-white transition duration-300 border border-gray-700/50">
                 <FaFacebookF />
               </a>
-              <a href="#" className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-[#1DA1F2] hover:text-white transition duration-300">
+              <a href="#" className="w-10 h-10 rounded-full bg-gray-800/80 flex items-center justify-center hover:bg-[#1DA1F2] hover:text-white transition duration-300 border border-gray-700/50">
                 <FaTwitter />
               </a>
-              <a href="https://www.youtube.com/@TV10India" target="_blank" className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-[#FF0000] hover:text-white transition duration-300">
+              <a href="https://www.youtube.com/@TV10India" target="_blank" className="w-10 h-10 rounded-full bg-gray-800/80 flex items-center justify-center hover:bg-[#FF0000] hover:text-white transition duration-300 border border-gray-700/50">
                 <FaYoutube />
               </a>
-              <a href="#" className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-[#E4405F] hover:text-white transition duration-300">
+              <a href="#" className="w-10 h-10 rounded-full bg-gray-800/80 flex items-center justify-center hover:bg-[#E4405F] hover:text-white transition duration-300 border border-gray-700/50">
                 <FaInstagram />
               </a>
             </div>
           </div>
 
-          {/* COLUMN 2: QUICK LINKS */}
+          {/* COLUMN 2: CATEGORIES */}
           <div>
             <h3 className="text-white font-bold text-lg mb-6 border-l-4 border-tv10-red pl-3">News Categories</h3>
             <ul className="space-y-3 text-sm">
@@ -60,7 +60,7 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* COLUMN 3: USEFUL LINKS */}
+          {/* COLUMN 3: COMPANY */}
           <div>
             <h3 className="text-white font-bold text-lg mb-6 border-l-4 border-tv10-red pl-3">Company</h3>
             <ul className="space-y-3 text-sm">
@@ -96,17 +96,17 @@ export default function Footer() {
         {/* BOTTOM BAR */}
         <div className="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-gray-500">
           <p>&copy; {new Date().getFullYear()} TV10 India Media Pvt Ltd. All rights reserved.</p>
-          <p className="mt-2 md:mt-0">
-            Designed with <span className="text-red-500">♥</span> for Bharat
+          <p className="mt-2 md:mt-0 text-gray-600">
+            Your Choice Your Voice
           </p>
         </div>
 
       </div>
 
-      {/* BACK TO TOP BUTTON */}
-      <button 
-        onClick={scrollToTop} 
-        className="fixed bottom-6 right-6 bg-tv10-red text-white p-3 rounded-full shadow-2xl z-50 hover:bg-white hover:text-tv10-red transition-all duration-300 animate-bounce border-2 border-transparent hover:border-tv10-red"
+      {/* BACK TO TOP */}
+      <button
+        onClick={scrollToTop}
+        className="fixed bottom-6 right-6 bg-tv10-red text-white p-3 rounded-full shadow-2xl z-50 hover:bg-white hover:text-tv10-red transition-all duration-300 border-2 border-transparent hover:border-tv10-red"
         aria-label="Back to Top"
         title="Go to Top"
       >
