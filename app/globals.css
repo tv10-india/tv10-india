@@ -6,16 +6,24 @@
   --foreground-rgb: 0, 0, 0;
 }
 
-/* Default Light Mode (Cream Paper feel) */
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   color: #1A1A1A;
   background: #FAFAFA;
 }
 
-/* Dark Mode Overrides */
 .dark body {
   color: #FAFAFA;
   background: #121212;
+}
+
+/* Premium text selection */
+::selection {
+  background-color: rgba(255, 193, 7, 0.3);
+  color: inherit;
 }
 
 /* Hide Scrollbar for Web Stories */
@@ -32,6 +40,15 @@ img {
   transition: opacity 0.3s ease-in-out;
 }
 
+/* Fade-in animation for sections */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fadeIn {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
 /* HIDE GOOGLE TRANSLATE BANNER */
 .skiptranslate {
   display: none !important;
@@ -39,7 +56,13 @@ img {
 body {
   top: 0 !important;
 }
-/* Ensure our hidden div stays hidden */
 #google_translate_element {
   display: none;
+}
+
+/* Premium link hover underline */
+@layer utilities {
+  .hover-underline {
+    @apply relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[2px] after:bg-current after:transition-all hover:after:w-full;
+  }
 }
