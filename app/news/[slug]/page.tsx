@@ -48,6 +48,16 @@ const RichTextComponents = {
         </a>
       );
     },
+    color: ({ children, value }: any) => (
+      <span style={{ color: value?.value }}>{children}</span>
+    ),
+  },
+  types: {
+    image: ({ value }: any) => (
+      <div className="relative w-full aspect-video my-6 rounded-lg overflow-hidden shadow-md">
+        <Image src={urlFor(value).url()} alt="" fill className="object-cover" />
+      </div>
+    ),
   },
 };
 
@@ -58,6 +68,7 @@ async function getArticle(slug: string) {
       title,
       slug,        // <--- ADDED THIS LINE (Fixes the crash)
       mainImage,
+      gallery,
       youtubeUrl,
       body,
       publishedAt,
@@ -184,6 +195,20 @@ export default async function ArticlePage({ params }: Props) {
             <div className="prose prose-lg dark:prose-invert max-w-none">
               {post.body && <PortableText value={post.body} components={RichTextComponents} />}
             </div>
+
+            {/* 4. IMAGE GALLERY */}
+            {post.gallery && post.gallery.length > 0 && (
+              <div className="mt-8">
+                <h3 className="text-lg font-bold mb-4 text-tv10-metal dark:text-white">Gallery</h3>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                  {post.gallery.map((img: any, i: number) => (
+                    <div key={i} className="relative aspect-square rounded-lg overflow-hidden shadow-sm">
+                      <Image src={urlFor(img).url()} alt={`${post.title} ${i + 1}`} fill className="object-cover hover:scale-105 transition duration-500" />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
 
           </article>
 
