@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import Link from "next/link";
 import { FaFacebookF, FaTwitter, FaYoutube, FaInstagram, FaArrowUp, FaEnvelope, FaMapMarkerAlt, FaPhone } from "react-icons/fa";
@@ -25,7 +25,7 @@ export default function Footer() {
                </div>
                <div>
                  <h2 className="text-2xl font-black text-white leading-none tracking-tighter">TV10 INDIA</h2>
-                 <p className="text-[10px] text-tv10-gold font-bold uppercase tracking-[0.2em]">Your Choice Your Voice</p>
+                 <p className="text-[10px] text-tv10-gold font-bold uppercase tracking-[0.2em]">Your Voice Your Choice</p>
                </div>
             </div>
             <p className="text-sm leading-relaxed text-gray-400 mb-6">
@@ -97,7 +97,7 @@ export default function Footer() {
         <div className="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-gray-500">
           <p>&copy; {new Date().getFullYear()} TV10 India Media Pvt Ltd. All rights reserved.</p>
           <p className="mt-2 md:mt-0 text-gray-600">
-            Your Choice Your Voice
+            Your Voice Your Choice
           </p>
         </div>
 
