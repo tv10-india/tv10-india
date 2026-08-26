@@ -10,6 +10,8 @@ html {
   scroll-behavior: smooth;
   background-color: #FAFAFA;
   overscroll-behavior-y: none;
+  max-width: 100vw;
+  overflow-x: hidden;
 }
 
 .dark html,
@@ -21,6 +23,8 @@ body {
   color: #1A1A1A;
   background: #FAFAFA;
   overscroll-behavior-y: none;
+  max-width: 100vw;
+  overflow-x: hidden;
 }
 
 .dark body {
@@ -68,6 +72,12 @@ img {
   white-space: nowrap;
   min-width: max-content;
   animation: tickerScroll 75s linear infinite;
+}
+
+@media (max-width: 768px) {
+  .ticker-track {
+    animation-duration: 30s;
+  }
 }
 
 .ticker-track:hover {
