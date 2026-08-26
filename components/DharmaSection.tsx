@@ -1,4 +1,4 @@
-﻿import Link from "next/link";
+import Link from "next/link";
 import Image from "next/image";
 import { urlFor } from "../sanityStudio/lib/sanity";
 import { FaOm, FaStar } from "react-icons/fa";
@@ -9,7 +9,7 @@ export default function DharmaSection({ news }: { news: any[] }) {
   if (dharmaNews.length === 0) return null;
 
   return (
-    <section className="relative bg-gradient-to-b from-[#2c0b0e] to-black text-white pt-20 pb-16 mt-12">
+    <section className="relative bg-gradient-to-b from-[#2c0b0e] to-black text-white pt-20 pb-16 mt-12 overflow-hidden">
       
       {/* --- PREMIUM GOLD SEPARATOR (Replaces the Wave) --- */}
       {/* 1. The Gold Line */}
