@@ -1,7 +1,7 @@
 import { client, urlFor } from "../../sanityStudio/lib/sanity";
 import Image from "next/image";
 import Link from "next/link";
-import Header from "@/components/Header";
+import Header, { Headline } from "@/components/Header";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 
 const POSTS_PER_PAGE = 9;
@@ -58,7 +58,15 @@ export default async function CategoryPage({ params, searchParams }: Props) {
 
   const totalPages = Math.ceil(total / POSTS_PER_PAGE);
 
-  const headlines = (posts || []).map((story: any) => ({
+  interface CategoryPost {
+    title: string;
+    slug?: { current?: string };
+    mainImage?: unknown;
+    publishedAt?: string;
+    category?: string;
+  }
+
+  const headlines: Headline[] = (posts || []).map((story: CategoryPost) => ({
     title: story.title,
     slug: story.slug?.current || "",
   }));
@@ -84,8 +92,8 @@ export default async function CategoryPage({ params, searchParams }: Props) {
           <>
             {/* Added 'justify-center' to center the whole grid if few items exist */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-center">
-              {posts.map((story: any) => (
-                <Link href={`/news/${story.slug.current}`} key={story.slug.current} className="group h-full max-w-md mx-auto w-full">
+              {posts.map((story: CategoryPost) => (
+                <Link href={`/news/${story.slug?.current || ""}`} key={story.slug?.current || story.title} className="group h-full max-w-md mx-auto w-full">
                   <div className="bg-white dark:bg-tv10-metal rounded-2xl shadow-md border border-gray-100 dark:border-gray-700 overflow-hidden hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 h-full flex flex-col">
                     
                     {/* Image Container */}
@@ -119,7 +127,7 @@ export default async function CategoryPage({ params, searchParams }: Props) {
                       {/* Date & Link */}
                       <div className="mt-auto flex flex-col items-center gap-2 text-xs text-gray-500 w-full">
                         <span className="font-semibold tracking-wide uppercase">
-                          {new Date(story.publishedAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
+                          {story.publishedAt ? new Date(story.publishedAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }) : ''}
                         </span>
                         <span className="text-tv10-red font-bold group-hover:underline mt-1">
                           Read Full Story
