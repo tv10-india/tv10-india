@@ -5,7 +5,7 @@ import Header from "@/components/Header";
 import Link from "next/link";
 import AdBanner from "@/components/AdBanner"; 
 import AudioPlayer from "@/components/AudioPlayer";
-import NewsCard from "@/components/NewsCard"; // Ensure this is imported
+import NewsCard from "@/components/NewsCard"; 
 import WhatsAppShareButton from "@/components/WhatsAppShareButton";
 import { FaYoutube, FaClock, FaFire, FaLayerGroup } from "react-icons/fa";
 
@@ -62,11 +62,21 @@ const RichTextComponents = {
   },
 };
 
+const StyledHeadingComponents = {
+  block: {
+    normal: ({ children }: any) => <>{children}</>,
+  },
+  marks: {
+    color: ({ children, value }: any) => <span style={{ color: value?.value }}>{children}</span>,
+  },
+};
+
 // 2. DATA FETCHING
 async function getArticle(slug: string) {
   const query = `
     *[_type == "post" && slug.current == $slug][0] {
       title,
+      styledTitle,
       slug,        // <--- ADDED THIS LINE (Fixes the crash)
       mainImage,
       gallery,
@@ -126,13 +136,25 @@ export default async function ArticlePage({ params }: Props) {
                </h3>
                <div className="space-y-4">
                  {post.categoryNews?.map((item: any) => (
-                   <Link href={`/news/${item.slug.current}`} key={item.slug.current} className="group block">
-                      <h4 className="text-xs font-bold leading-snug group-hover:text-tv10-red mb-1">
-                        {item.title}
-                      </h4>
-                      <span className="text-[10px] text-gray-400 block border-b border-gray-100 dark:border-gray-800 pb-2">
-                        {new Date(item.publishedAt).toLocaleDateString()}
-                      </span>
+                   <Link href={`/news/${item.slug.current}`} key={item.slug.current} className="flex gap-3 group items-start border-b border-gray-100 dark:border-gray-800 pb-3 last:border-0 last:pb-0">
+                      <div className="w-16 h-12 relative flex-shrink-0 bg-gray-200 rounded-md overflow-hidden">
+                         {item.mainImage && (
+                           <Image
+                             src={urlFor(item.mainImage).url()}
+                             alt={item.title || "news"}
+                             fill
+                             className="object-cover group-hover:scale-105 transition duration-300"
+                           />
+                         )}
+                      </div>
+                      <div className="flex-1">
+                         <h4 className="text-xs font-bold leading-tight group-hover:text-tv10-red line-clamp-2 text-gray-800 dark:text-gray-200 mb-1">
+                           {item.title}
+                         </h4>
+                         <span className="text-[10px] text-gray-400 block">
+                           {new Date(item.publishedAt).toLocaleDateString()}
+                         </span>
+                      </div>
                    </Link>
                  ))}
                </div>
@@ -148,7 +170,9 @@ export default async function ArticlePage({ params }: Props) {
             </div>
 
             <h1 className="text-2xl md:text-3xl font-extrabold leading-tight mb-4 text-black dark:text-white">
-              {post.title}
+              {post.styledTitle?.length > 0
+                ? <PortableText value={post.styledTitle} components={StyledHeadingComponents} />
+                : post.title}
             </h1>
 
             {/* DATE & SHARE BAR */}
