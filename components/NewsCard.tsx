@@ -75,7 +75,7 @@ export default function NewsCard({ post }: { post: any }) {
       </button>
 
       {/* HIDDEN CARD */}
-      <div className="fixed top-0 left-0 -z-50 w-[1080px] h-[1920px] pointer-events-none opacity-0">
+      <div className="fixed top-0 left-[-9999px] -z-50 w-[1080px] h-[1920px] pointer-events-none opacity-0 overflow-hidden">
         <div 
           ref={cardRef} 
           className="w-[1080px] h-[1920px] bg-[#101114] relative overflow-hidden"
