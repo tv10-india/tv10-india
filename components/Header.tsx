@@ -5,11 +5,10 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { FaSearch, FaMoon, FaSun, FaBars, FaTimes, FaFacebookF, FaTwitter, FaYoutube, FaInstagram } from "react-icons/fa";
 import LanguageToggle from "@/components/LanguageToggle";
-import { client } from "@/sanityStudio/lib/sanity";
 
 type Headline = { title: string; slug: string };
 const fallbackHeadline: Headline = {
-  title: "BREAKING: Welcome to TV10 India | Latest News Updates",
+  title: "Latest headlines coming soon",
   slug: "",
 };
 
@@ -47,10 +46,10 @@ export default function Header() {
 
   // Latest headlines for the rolling breaking-news ticker
   useEffect(() => {
-    client
-      .fetch(`*[_type == "post"] | order(publishedAt desc)[0...8]{ title, "slug": slug.current }`)
-      .then((data: Headline[]) => setHeadlines(data || []))
-      .catch(() => {});
+    fetch("/api/headlines")
+      .then((response) => response.json())
+      .then((data: { headlines?: Headline[] }) => setHeadlines(data.headlines || []))
+      .catch(() => setHeadlines([]));
   }, []);
 
   const tickerHeadlines = headlines.length > 0 ? headlines : [fallbackHeadline];
@@ -97,7 +96,7 @@ export default function Header() {
               TV10 <span className="text-tv10-gold">INDIA</span>
             </h1>
             <p className="text-[10px] text-gray-500 dark:text-gray-400 font-bold uppercase tracking-[0.2em] mt-0.5">
-              Your Choice Your Voice
+              Your Voice Your Choice
             </p>
           </div>
           <div className="md:hidden">
@@ -105,7 +104,7 @@ export default function Header() {
               TV10 <span className="text-tv10-gold">INDIA</span>
             </h1>
             <p className="text-[8px] text-gray-500 dark:text-gray-400 font-bold uppercase tracking-[0.15em]">
-              Your Choice Your Voice
+              Your Voice Your Choice
             </p>
           </div>
         </Link>
