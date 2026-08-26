@@ -1,5 +1,20 @@
 import {defineField, defineType} from 'sanity'
-import {slugify} from 'transliteration'
+
+const createSlug = (input: string) => {
+  const asciiSlug = input
+    .normalize('NFKC')
+    .toLowerCase()
+    .trim()
+    .replace(/[a-z0-9]+/g, (word) => `-${word}`)
+    .replace(/[^a-z0-9]+/g, (characters) => Array.from(characters)
+      .filter((character) => !/\s/.test(character))
+      .map((character) => `-${character.codePointAt(0)?.toString(36)}`)
+      .join(''))
+    .replace(/-+/g, '-')
+    .replace(/^-+|-+$/g, '');
+
+  return asciiSlug.slice(0, 96);
+};
 
 export default defineType({
   name: 'post',
@@ -56,7 +71,7 @@ export default defineType({
       options: {
         source: 'title',
         maxLength: 96,
-        slugify: (input) => slugify(input, {lowercase: true, separator: '-'}).slice(0, 96),
+        slugify: createSlug,
       },
       validation: (rule) => rule.required(),
     }),
