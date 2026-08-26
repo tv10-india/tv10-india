@@ -1,4 +1,5 @@
 import {defineField, defineType} from 'sanity'
+import {slugify} from 'transliteration'
 
 export default defineType({
   name: 'post',
@@ -15,7 +16,12 @@ export default defineType({
       name: 'slug',
       title: 'URL Slug',
       type: 'slug',
-      options: { source: 'title', maxLength: 96 },
+      options: {
+        source: 'title',
+        maxLength: 96,
+        slugify: (input) => slugify(input, {lowercase: true, separator: '-'}).slice(0, 96),
+      },
+      validation: (rule) => rule.required(),
     }),
     defineField({
       name: 'isBreaking',
