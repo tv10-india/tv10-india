@@ -9,9 +9,6 @@
 html {
   scroll-behavior: smooth;
   background-color: #FAFAFA;
-  overscroll-behavior-y: none;
-  max-width: 100vw;
-  overflow-x: hidden;
 }
 
 .dark html,
@@ -22,9 +19,7 @@ html.dark {
 body {
   color: #1A1A1A;
   background: #FAFAFA;
-  overscroll-behavior-y: none;
-  max-width: 100vw;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 .dark body {
