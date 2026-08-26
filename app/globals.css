@@ -8,11 +8,19 @@
 
 html {
   scroll-behavior: smooth;
+  background-color: #FAFAFA;
+  overscroll-behavior-y: none;
+}
+
+.dark html,
+html.dark {
+  background-color: #121212;
 }
 
 body {
   color: #1A1A1A;
   background: #FAFAFA;
+  overscroll-behavior-y: none;
 }
 
 .dark body {
