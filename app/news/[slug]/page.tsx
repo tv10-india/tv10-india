@@ -130,10 +130,14 @@ export default async function ArticlePage({ params }: Props) {
   }
 
   const videoId = post.youtubeUrl ? getYouTubeId(post.youtubeUrl) : null;
+  const headlines = (post.trendingNews || []).map((item: any) => ({
+    title: item.title,
+    slug: item.slug?.current || "",
+  }));
 
   return (
     <main className="bg-[#f4f4f4] dark:bg-black min-h-screen text-gray-900 dark:text-gray-100 font-sans">
-      <Header />
+      <Header initialHeadlines={headlines} />
 
       <div className="container mx-auto px-4 py-8 max-w-[1400px]">
 
