@@ -6,19 +6,23 @@ import Link from "next/link";
 import { FaSearch, FaMoon, FaSun, FaBars, FaTimes, FaFacebookF, FaTwitter, FaYoutube, FaInstagram } from "react-icons/fa";
 import LanguageToggle from "@/components/LanguageToggle";
 
-type Headline = { title: string; slug: string };
+export type Headline = { title: string; slug: string };
+export interface HeaderProps {
+  initialHeadlines?: Headline[];
+}
+
 const fallbackHeadline: Headline = {
   title: "Latest headlines coming soon",
   slug: "",
 };
 
-export default function Header() {
+export default function Header({ initialHeadlines }: HeaderProps) {
   const router = useRouter();
   const [darkMode, setDarkMode] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
-  const [headlines, setHeadlines] = useState<Headline[]>([]);
+  const [headlines, setHeadlines] = useState<Headline[]>(initialHeadlines || []);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -46,10 +50,14 @@ export default function Header() {
 
   // Latest headlines for the rolling breaking-news ticker
   useEffect(() => {
-    fetch("/api/headlines")
+    fetch("/api/headlines", { cache: "no-store" })
       .then((response) => response.json())
-      .then((data: { headlines?: Headline[] }) => setHeadlines(data.headlines || []))
-      .catch(() => setHeadlines([]));
+      .then((data: { headlines?: Headline[] }) => {
+        if (data.headlines && data.headlines.length > 0) {
+          setHeadlines(data.headlines);
+        }
+      })
+      .catch(() => {});
   }, []);
 
   const tickerHeadlines = headlines.length > 0 ? headlines : [fallbackHeadline];
