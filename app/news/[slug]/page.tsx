@@ -1,7 +1,7 @@
 import { client, urlFor } from "../../../sanityStudio/lib/sanity";
 import { PortableText } from "@portabletext/react";
 import Image from "next/image";
-import Header from "@/components/Header";
+import Header, { Headline } from "@/components/Header";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import AdBanner from "@/components/AdBanner"; 
@@ -130,7 +130,7 @@ export default async function ArticlePage({ params }: Props) {
   }
 
   const videoId = post.youtubeUrl ? getYouTubeId(post.youtubeUrl) : null;
-  const headlines = (post.trendingNews || []).map((item: any) => ({
+  const headlines: Headline[] = (post.trendingNews || []).map((item: { title: string; slug?: { current?: string } }) => ({
     title: item.title,
     slug: item.slug?.current || "",
   }));
