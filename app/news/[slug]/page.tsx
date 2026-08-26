@@ -3,9 +3,10 @@ import { PortableText } from "@portabletext/react";
 import Image from "next/image";
 import Header from "@/components/Header";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import AdBanner from "@/components/AdBanner"; 
 import AudioPlayer from "@/components/AudioPlayer";
-import NewsCard from "@/components/NewsCard"; 
+import NewsCard from "@/components/NewsCard"; // Ensure this is imported
 import WhatsAppShareButton from "@/components/WhatsAppShareButton";
 import { FaYoutube, FaClock, FaFire, FaLayerGroup } from "react-icons/fa";
 
@@ -72,27 +73,40 @@ const StyledHeadingComponents = {
 };
 
 // 2. DATA FETCHING
-async function getArticle(slug: string) {
+async function getArticle(rawSlug: string) {
+  if (!rawSlug) return null;
+  const decodedSlug = decodeURIComponent(rawSlug).trim();
+  const cleanSlug = decodedSlug.replace(/\/+$/, "");
+
   const query = `
-    *[_type == "post" && slug.current == $slug][0] {
+    *[_type == "post" && (
+      slug.current == $cleanSlug ||
+      slug.current == $cleanSlug + "/" ||
+      slug.current == "/" + $cleanSlug ||
+      lower(slug.current) == lower($cleanSlug) ||
+      lower(slug.current) == lower($cleanSlug) + "/" ||
+      lower(slug.current) == " " + lower($cleanSlug) ||
+      lower(slug.current) == lower($cleanSlug) + " " ||
+      slug.current == $decodedSlug
+    )][0] {
       title,
       styledTitle,
-      slug,        // <--- ADDED THIS LINE (Fixes the crash)
+      slug,
       mainImage,
       gallery,
       youtubeUrl,
       body,
       publishedAt,
       category,
-      "categoryNews": *[_type == "post" && category == ^.category && slug.current != $slug] | order(publishedAt desc) [0...5] {
+      "categoryNews": *[_type == "post" && category == ^.category && slug.current != ^.slug.current] | order(publishedAt desc) [0...5] {
         title, slug, mainImage, publishedAt
       },
-      "trendingNews": *[_type == "post" && slug.current != $slug] | order(publishedAt desc) [0...5] {
+      "trendingNews": *[_type == "post" && slug.current != ^.slug.current] | order(publishedAt desc) [0...5] {
         title, slug, mainImage, publishedAt
       }
     }
   `;
-  const params = { slug: slug };
+  const params = { cleanSlug, decodedSlug };
   return client.fetch(query, params);
 }
 
@@ -111,7 +125,9 @@ export default async function ArticlePage({ params }: Props) {
   const resolvedParams = await params;
   const post = await getArticle(resolvedParams.slug);
 
-  if (!post) return <div className="p-20 text-center">Loading...</div>;
+  if (!post) {
+    notFound();
+  }
 
   const videoId = post.youtubeUrl ? getYouTubeId(post.youtubeUrl) : null;
 
@@ -135,28 +151,35 @@ export default async function ArticlePage({ params }: Props) {
                  <FaLayerGroup className="text-tv10-gold" /> More in {post.category || "News"}
                </h3>
                <div className="space-y-4">
-                 {post.categoryNews?.map((item: any) => (
-                   <Link href={`/news/${item.slug.current}`} key={item.slug.current} className="flex gap-3 group items-start border-b border-gray-100 dark:border-gray-800 pb-3 last:border-0 last:pb-0">
-                      <div className="w-16 h-12 relative flex-shrink-0 bg-gray-200 rounded-md overflow-hidden">
-                         {item.mainImage && (
-                           <Image
-                             src={urlFor(item.mainImage).url()}
-                             alt={item.title || "news"}
-                             fill
-                             className="object-cover group-hover:scale-105 transition duration-300"
-                           />
-                         )}
-                      </div>
-                      <div className="flex-1">
-                         <h4 className="text-xs font-bold leading-tight group-hover:text-tv10-red line-clamp-2 text-gray-800 dark:text-gray-200 mb-1">
-                           {item.title}
-                         </h4>
-                         <span className="text-[10px] text-gray-400 block">
-                           {new Date(item.publishedAt).toLocaleDateString()}
-                         </span>
-                      </div>
-                   </Link>
-                 ))}
+                 {(post.categoryNews?.length > 0 ? post.categoryNews : post.trendingNews)?.map((item: any, index: number) => {
+                   const itemSlug = item.slug?.current;
+                   if (!itemSlug) return null;
+                   const imageUrl = item.mainImage ? urlFor(item.mainImage).url() : null;
+                   return (
+                     <Link href={`/news/${itemSlug}`} key={itemSlug || index} className="flex gap-3 group items-start border-b border-gray-100 dark:border-gray-800 pb-3 last:border-0 last:pb-0">
+                        <div className="w-16 h-12 relative flex-shrink-0 bg-gray-200 rounded-md overflow-hidden">
+                           {imageUrl && (
+                             <Image
+                               src={imageUrl}
+                               alt={item.title || "news"}
+                               fill
+                               className="object-cover group-hover:scale-105 transition duration-300"
+                             />
+                           )}
+                        </div>
+                        <div className="flex-1">
+                           <h4 className="text-xs font-bold leading-tight group-hover:text-tv10-red line-clamp-2 text-gray-800 dark:text-gray-200 mb-1">
+                             {item.title}
+                           </h4>
+                           {item.publishedAt && (
+                             <span className="text-[10px] text-gray-400 block">
+                               {new Date(item.publishedAt).toLocaleDateString()}
+                             </span>
+                           )}
+                        </div>
+                     </Link>
+                   );
+                 })}
                </div>
              </div>
           </aside>
@@ -265,18 +288,23 @@ export default async function ArticlePage({ params }: Props) {
                  <FaFire className="text-tv10-gold" /> Trending Now
                </h3>
                <div className="space-y-4">
-                 {post.trendingNews?.map((item: any) => (
-                   <Link href={`/news/${item.slug.current}`} key={item.slug.current} className="flex gap-3 group items-start">
-                      <div className="w-16 h-12 relative flex-shrink-0 bg-gray-200 rounded-md overflow-hidden">
-                         {item.mainImage && <Image src={urlFor(item.mainImage).url()} alt="news" fill className="object-cover" />}
-                      </div>
-                      <div>
-                         <h4 className="text-xs font-bold leading-tight group-hover:text-tv10-red line-clamp-2 text-gray-800 dark:text-gray-200">
-                           {item.title}
-                         </h4>
-                      </div>
-                   </Link>
-                 ))}
+                 {post.trendingNews?.map((item: any, index: number) => {
+                   const itemSlug = item.slug?.current;
+                   if (!itemSlug) return null;
+                   const imageUrl = item.mainImage ? urlFor(item.mainImage).url() : null;
+                   return (
+                     <Link href={`/news/${itemSlug}`} key={itemSlug || index} className="flex gap-3 group items-start">
+                        <div className="w-16 h-12 relative flex-shrink-0 bg-gray-200 rounded-md overflow-hidden">
+                           {imageUrl && <Image src={imageUrl} alt={item.title || "news"} fill className="object-cover" />}
+                        </div>
+                        <div>
+                           <h4 className="text-xs font-bold leading-tight group-hover:text-tv10-red line-clamp-2 text-gray-800 dark:text-gray-200">
+                             {item.title}
+                           </h4>
+                        </div>
+                     </Link>
+                   );
+                 })}
                </div>
             </div>
 
