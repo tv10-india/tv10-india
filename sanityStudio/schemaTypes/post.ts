@@ -13,6 +13,43 @@ export default defineType({
       validation: (rule) => rule.required(),
     }),
     defineField({
+      name: 'styledTitle',
+      title: 'Styled Article Heading',
+      description: 'Optional. Use this to color selected words in the article heading. Keep Headline filled for cards, search, and URL generation.',
+      type: 'array',
+      of: [
+        {
+          type: 'block',
+          styles: [],
+          marks: {
+            annotations: [
+              {
+                name: 'color',
+                title: 'Text Color',
+                type: 'object',
+                fields: [
+                  {
+                    name: 'value',
+                    title: 'Color',
+                    type: 'string',
+                    options: {
+                      list: [
+                        {title: 'Red', value: '#D32F2F'},
+                        {title: 'Gold', value: '#FFC107'},
+                        {title: 'Blue', value: '#1565C0'},
+                        {title: 'Green', value: '#2E7D32'},
+                        {title: 'Black', value: '#000000'},
+                      ],
+                    },
+                  },
+                ],
+              },
+            ],
+          },
+        },
+      ],
+    }),
+    defineField({
       name: 'slug',
       title: 'URL Slug',
       type: 'slug',
