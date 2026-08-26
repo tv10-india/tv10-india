@@ -2,13 +2,21 @@
 
 import { useRef, useState } from "react";
 import html2canvas from "html2canvas";
-import { FaWhatsapp, FaSpinner, FaExclamationTriangle } from "react-icons/fa";
+import { FaDownload, FaExclamationTriangle, FaSpinner, FaWhatsapp } from "react-icons/fa";
 import { urlFor } from "../sanityStudio/lib/sanity";
 
 export default function NewsCard({ post }: { post: any }) {
   const cardRef = useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
+  const headlineLength = post.title?.length || 0;
+  const headlineSize = headlineLength > 220
+    ? "text-[44px]"
+    : headlineLength > 160
+      ? "text-[52px]"
+      : headlineLength > 100
+        ? "text-[62px]"
+        : "text-[74px]";
 
   // Helper: Use our API Proxy to get the image safely
   const getSafeImageUrl = (source: any) => {
@@ -55,19 +63,22 @@ export default function NewsCard({ post }: { post: any }) {
       <button 
         onClick={handleDownload}
         disabled={loading}
-        className={`w-full font-bold py-3 rounded-xl shadow-lg flex items-center justify-center gap-2 hover:scale-105 transition transform ${
-          error ? "bg-red-600 text-white" : "bg-gradient-to-r from-green-600 to-green-500 text-white"
+        className={`w-full rounded-lg border px-4 py-3 text-sm font-bold shadow-sm transition disabled:cursor-wait disabled:opacity-75 ${
+          error ? "border-red-700 bg-red-600 text-white" : "border-green-700 bg-[#25D366] text-white hover:bg-green-600"
         }`}
       >
-        {loading ? <FaSpinner className="animate-spin" /> : error ? <FaExclamationTriangle /> : <FaWhatsapp className="text-xl" />}
-        {loading ? "Generating Card..." : error ? "Try Again" : "Download WhatsApp Status"}
+        <span className="flex items-center justify-center gap-2">
+          {loading ? <FaSpinner className="animate-spin" /> : error ? <FaExclamationTriangle /> : <FaDownload />}
+          {loading ? "Creating status..." : error ? "Try again" : "Download WhatsApp Status"}
+          {!loading && !error && <FaWhatsapp className="text-base" />}
+        </span>
       </button>
 
       {/* HIDDEN CARD */}
       <div className="fixed top-0 left-0 -z-50 w-[1080px] h-[1920px] pointer-events-none opacity-0">
         <div 
           ref={cardRef} 
-          className="w-[1080px] h-[1920px] bg-black relative flex flex-col justify-between overflow-hidden"
+          className="w-[1080px] h-[1920px] bg-[#101114] relative overflow-hidden"
         >
             {/* BACKGROUND */}
             <div className="absolute inset-0 z-0">
@@ -76,47 +87,52 @@ export default function NewsCard({ post }: { post: any }) {
                 <img 
                   src={getSafeImageUrl(post.mainImage)} 
                   alt="bg" 
-                  className="w-full h-full object-cover opacity-60"
+                  className="w-full h-full object-cover opacity-75 scale-110"
                   crossOrigin="anonymous"
                 />
               ) : (
-                 <div className="w-full h-full bg-gradient-to-br from-tv10-red to-black"></div>
+                  <div className="w-full h-full bg-gradient-to-br from-[#b91c1c] via-[#101114] to-black"></div>
               )}
-              <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black opacity-90"></div>
+                <div className="absolute inset-0 bg-gradient-to-b from-black/85 via-black/15 to-black"></div>
+                <div className="absolute inset-x-0 bottom-0 h-[1080px] bg-gradient-to-t from-[#101114] via-[#101114]/80 to-transparent"></div>
             </div>
 
-            {/* LOGO */}
-            <div className="relative z-10 p-10 flex justify-center pt-32">
-               <div className="bg-tv10-red text-white px-10 py-4 rounded-full font-black text-5xl shadow-2xl border-4 border-white tracking-tighter">
-                  TV10 INDIA
-               </div>
+              {/* SECTION LABEL */}
+              <div className="relative z-10 mx-14 mt-16 border-b border-white/50 pb-8">
+                 <div className="flex items-center gap-4">
+                   <img src="/logo.png" alt="TV10 India" className="h-20 w-20 rounded-full border-2 border-tv10-gold object-cover" />
+                   <p className="text-4xl font-black tracking-tight text-white">TV10 INDIA</p>
+                 </div>
+                 <div className="absolute left-1/2 top-3 -translate-x-1/2 text-center text-2xl font-bold uppercase leading-none tracking-widest text-white">News</div>
             </div>
 
             {/* CONTENT */}
-            <div className="relative z-10 px-16 mb-auto mt-40">
-               <span className="bg-tv10-gold text-black px-8 py-3 text-4xl font-bold uppercase rounded-lg mb-8 inline-block shadow-lg">
+              <div className="absolute inset-x-0 bottom-[240px] z-10 px-14">
+                 <div className="relative mb-8 h-12">
+                   <span className="absolute left-1/2 -translate-x-1/2 text-center text-3xl font-black uppercase leading-none tracking-wider text-tv10-gold">
                  {post.category || "Breaking News"}
-               </span>
-               <h1 className="text-white text-[7rem] font-black leading-tight drop-shadow-2xl line-clamp-4">
+                   </span>
+                 </div>
+                 <h1 className={`py-1 text-center font-black leading-[1.08] tracking-tight text-white ${headlineSize}`}>
                  {post.title}
                </h1>
             </div>
 
             {/* FOOTER */}
-            <div className="relative z-10 mt-auto">
-               <div className="bg-gradient-to-r from-tv10-red to-tv10-gold h-6 w-full"></div>
-               <div className="bg-white py-14 px-16 flex items-center justify-between">
-                  <div>
-                    <p className="text-4xl text-gray-500 font-bold mb-4 uppercase tracking-widest">
+              <div className="absolute inset-x-0 bottom-0 z-10">
+                <div className="h-5 w-full bg-tv10-red"></div>
+                <div className="grid grid-cols-2 items-end bg-white px-14 py-9">
+                  <div className="text-left">
+                    <p className="mb-2 text-2xl font-bold uppercase tracking-[0.15em] text-gray-500">
                        {new Date(post.publishedAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}
                     </p>
-                    <p className="text-6xl font-black text-tv10-metal tracking-tighter">
-                      www.tv10india.com
+                    <p className="text-3xl font-black tracking-tight text-tv10-metal">
+                     tv10-india.vercel.app
                     </p>
                   </div>
                   <div className="text-right">
-                     <p className="text-4xl font-bold text-tv10-red mb-2">Follow for Truth</p>
-                     <p className="text-5xl font-black text-black">YouTube • FB</p>
+                    <p className="mb-2 text-2xl font-bold uppercase tracking-wider text-tv10-red">Follow TV10 India</p>
+                    <p className="text-3xl font-black tracking-tight text-black">NEWS THAT MATTERS</p>
                   </div>
                </div>
             </div>
