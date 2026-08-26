@@ -58,9 +58,14 @@ export default async function CategoryPage({ params, searchParams }: Props) {
 
   const totalPages = Math.ceil(total / POSTS_PER_PAGE);
 
+  const headlines = (posts || []).map((story: any) => ({
+    title: story.title,
+    slug: story.slug?.current || "",
+  }));
+
   return (
     <main className="min-h-screen bg-tv10-cream dark:bg-tv10-dark">
-      <Header />
+      <Header initialHeadlines={headlines} />
 
       <div className="container mx-auto px-4 py-10">
         
