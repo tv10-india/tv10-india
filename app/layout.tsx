@@ -5,6 +5,8 @@ import Footer from "@/components/Footer";
 import Script from "next/script";
 import GoogleTranslateScript from "@/components/GoogleTranslateScript";
 const inter = Inter({ subsets: ["latin"] });
+const adsenseClient = process.env.NEXT_PUBLIC_ADSENSE_CLIENT ?? "ca-pub-8748522674365627";
+const googleAnalyticsId = process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID;
 
 export const metadata: Metadata = {
   title: "TV10 India | Your Choice Your Voice",
@@ -21,13 +23,24 @@ export default function RootLayout({
       <body className={inter.className}>
         <GoogleTranslateScript />
 
-        {/* ADSENSE */}
         <Script
           async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8748522674365627"
+          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsenseClient}`}
           crossOrigin="anonymous"
           strategy="afterInteractive"
         />
+
+        {googleAnalyticsId && (
+          <>
+            <Script src={`https://www.googletagmanager.com/gtag/js?id=${googleAnalyticsId}`} strategy="afterInteractive" />
+            <Script id="google-analytics" strategy="afterInteractive">
+              {`window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', '${googleAnalyticsId}');`}
+            </Script>
+          </>
+        )}
 
         {children}
         <Footer />
