@@ -1,4 +1,3 @@
-import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 
 export default function AdvertisePage() {
@@ -13,7 +12,6 @@ export default function AdvertisePage() {
           <p>For advertising enquiries, write to <a className="font-bold text-tv10-red hover:underline" href="mailto:editor@tv10india.com?subject=Advertising%20Enquiry">editor@tv10india.com</a>.</p>
         </div>
       </section>
-      <Footer />
     </main>
   );
 }
