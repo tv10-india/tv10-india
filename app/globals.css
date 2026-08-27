@@ -68,7 +68,7 @@ img {
   align-items: center;
   white-space: nowrap;
   min-width: max-content;
-  animation: tickerScroll 75s linear infinite;
+  animation: tickerScroll 52s linear infinite;
 }
 
 @media (max-width: 768px) {
