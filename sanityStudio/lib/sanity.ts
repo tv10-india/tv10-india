@@ -1,12 +1,10 @@
 import { createClient } from 'next-sanity'
 import imageUrlBuilder from '@sanity/image-url'
 
-// 1. HARDCODED CONFIGURATION (Bypasses the missing file error)
 export const projectId = 'uh81euwc'
 export const dataset = 'production'
 export const apiVersion = '2024-01-01'
 
-// 2. CREATE CLIENT
 export const client = createClient({
   projectId,
   dataset,
@@ -22,7 +20,7 @@ export function urlFor(source: any) {
     return { url: () => '' }
   }
   try {
-    return builder.image(source)
+      return builder.image(source).auto('format').quality(75)
   } catch {
     return { url: () => '' }
   }
