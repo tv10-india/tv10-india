@@ -68,12 +68,12 @@ img {
   align-items: center;
   white-space: nowrap;
   min-width: max-content;
-  animation: tickerScroll 52s linear infinite;
+  animation: tickerScroll 70s linear infinite;
 }
 
 @media (max-width: 768px) {
   .ticker-track {
-    animation-duration: 30s;
+    animation-duration: 45s;
   }
 }
 
