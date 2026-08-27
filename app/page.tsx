@@ -7,6 +7,7 @@ import DharmaSection from "@/components/DharmaSection";
 import VideoSection from "@/components/VideoSection";
 import MysterySection from "@/components/MysterySection";
 import CategoryNewsSection from "@/components/CategoryNewsSection";
+import type { NewsItem, WebStory } from "../types/content";
 
 // Updated Query to fetch @/components/MysterySectionicates
 async function getData() {
@@ -26,14 +27,14 @@ async function getData() {
   }`;
   
   // Disable cache so you see new posts instantly
-  return client.fetch(query, {}, { next: { revalidate: 0 } }); 
+  return client.fetch<{ news: NewsItem[]; stories: WebStory[] }>(query, {}, { next: { revalidate: 0 } }); 
 }
 
 export default async function Home() {
   const { news, stories } = await getData();
 
   // Extract headlines for header ticker
-  const headlines: Headline[] = (news || []).slice(0, 10).map((item: { title: string; slug?: { current?: string } }) => ({
+  const headlines: Headline[] = (news || []).slice(0, 10).map((item: NewsItem) => ({
     title: item.title,
     slug: item.slug?.current || "",
   }));
