@@ -1,9 +1,14 @@
 import {defineField, defineType} from 'sanity'
 import {slugify} from 'transliteration'
 
-const createSlug = (input: string) => {
-  if (!input) return ''
-  return slugify(input, {lowercase: true, separator: '-'}).slice(0, 96)
+const createSlug = (input: unknown) => {
+  const title = typeof input === 'string' ? input.trim() : ''
+  if (!title) return ''
+
+  return slugify(title, {lowercase: true, separator: '-'})
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 96)
+    .replace(/-+$/g, '')
 }
 
 export default defineType({
