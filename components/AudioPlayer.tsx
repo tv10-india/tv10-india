@@ -59,6 +59,8 @@ export default function AudioPlayer({ text }: { text: string }) {
       return;
     }
 
+    setIsSupported(true);
+
     const loadVoices = () => {
       const voices = window.speechSynthesis.getVoices();
 
@@ -66,10 +68,10 @@ export default function AudioPlayer({ text }: { text: string }) {
         voices.find((v) => v.name.includes("Google हिन्दी")) ||
         voices.find((v) => v.name.includes("Lekha")) ||
         voices.find((v) => v.name.includes("Hemant")) ||
-        voices.find((v) => v.lang === "hi-IN");
+        voices.find((v) => v.lang === "hi-IN") ||
+        voices.find((v) => v.lang.startsWith("hi"));
 
       setHindiVoice(bestVoice || null);
-      setIsSupported(bestVoice !== undefined);
     };
 
     loadVoices();
