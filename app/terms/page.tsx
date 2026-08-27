@@ -1,4 +1,3 @@
-import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 
 export default function TermsPage() {
@@ -14,7 +13,6 @@ export default function TermsPage() {
           <div><h2 className="text-xl font-bold text-tv10-metal dark:text-white">Contact</h2><p className="mt-2 leading-relaxed">For questions, email <a className="font-bold text-tv10-red hover:underline" href="mailto:editor@tv10india.com">editor@tv10india.com</a>.</p></div>
         </div>
       </section>
-      <Footer />
     </main>
   );
 }
