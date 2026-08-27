@@ -1,4 +1,5 @@
 import { client, urlFor } from "../../../sanityStudio/lib/sanity";
+import type { Metadata } from "next";
 import { PortableText } from "@portabletext/react";
 import Image from "next/image";
 import Header, { Headline } from "@/components/Header";
@@ -119,6 +120,39 @@ function getYouTubeId(url: string) {
 
 type Props = {
   params: Promise<{ slug: string }>;
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params;
+  const post = await getArticle(slug);
+
+  if (!post) {
+    return { title: "Article Not Found | TV10 India" };
+  }
+
+  const title = `${post.title} | TV10 India`;
+  const description = `Read the latest news from TV10 India: ${post.title}`;
+  const imageUrl = post.mainImage
+    ? urlFor(post.mainImage).url()
+    : undefined;
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      type: "article",
+      publishedTime: post.publishedAt,
+      images: imageUrl ? [{ url: imageUrl, width: 1200, height: 630, alt: post.title }] : [],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: imageUrl ? [imageUrl] : [],
+    },
+  };
 }
 
 export default async function ArticlePage({ params }: Props) {
