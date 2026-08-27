@@ -6,6 +6,19 @@ import { FaPlay, FaPause, FaStop, FaHeadphones } from "react-icons/fa";
 const SPEEDS = [0.75, 1, 1.25, 1.5] as const;
 type Speed = (typeof SPEEDS)[number];
 
+function getActiveLang(): "hi" | "en" {
+  const cookie = document.cookie
+    .split(";")
+    .find((c) => c.trim().startsWith("googtrans="));
+  if (cookie && cookie.split("/").pop() === "en") return "en";
+  return "hi";
+}
+
+function getArticleTextFromDOM(): string {
+  const el = document.getElementById("article-body");
+  return el ? el.innerText.trim() : "";
+}
+
 function splitIntoChunks(text: string): string[] {
   const sentences = text.split(/(?<=[.?!।॥])\s+/);
   const chunks: string[] = [];
@@ -32,9 +45,34 @@ function estimateListenTime(text: string, speed: Speed): number {
   return Math.max(1, Math.round(wordCount / (130 * speed)));
 }
 
+function findVoice(
+  voices: SpeechSynthesisVoice[],
+  lang: "hi" | "en"
+): SpeechSynthesisVoice | null {
+  if (lang === "en") {
+    return (
+      voices.find((v) => v.name.includes("Google US English")) ||
+      voices.find((v) => v.name.includes("Google UK English")) ||
+      voices.find((v) => v.lang === "en-US") ||
+      voices.find((v) => v.lang === "en-GB") ||
+      voices.find((v) => v.lang.startsWith("en")) ||
+      null
+    );
+  }
+  return (
+    voices.find((v) => v.name.includes("Google हिन्दी")) ||
+    voices.find((v) => v.name.includes("Lekha")) ||
+    voices.find((v) => v.name.includes("Hemant")) ||
+    voices.find((v) => v.lang === "hi-IN") ||
+    voices.find((v) => v.lang.startsWith("hi")) ||
+    null
+  );
+}
+
 export default function AudioPlayer({ text }: { text: string }) {
   const [isSupported, setIsSupported] = useState<boolean | null>(null);
-  const [hindiVoice, setHindiVoice] = useState<SpeechSynthesisVoice | null>(null);
+  const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
+  const [lang, setLang] = useState<"hi" | "en">("hi");
   const [status, setStatus] = useState<"idle" | "playing" | "paused">("idle");
   const [speed, setSpeed] = useState<Speed>(1);
   const [currentChunk, setCurrentChunk] = useState(0);
@@ -43,11 +81,13 @@ export default function AudioPlayer({ text }: { text: string }) {
   const chunksRef = useRef<string[]>([]);
   const currentChunkRef = useRef(0);
   const speedRef = useRef<Speed>(1);
-  const voiceRef = useRef<SpeechSynthesisVoice | null>(null);
+  const langRef = useRef<"hi" | "en">("hi");
+  const voicesRef = useRef<SpeechSynthesisVoice[]>([]);
   const stoppedRef = useRef(false);
 
   speedRef.current = speed;
-  voiceRef.current = hindiVoice;
+  langRef.current = lang;
+  voicesRef.current = voices;
 
   useEffect(() => {
     if (typeof window === "undefined" || !window.speechSynthesis) {
@@ -56,16 +96,10 @@ export default function AudioPlayer({ text }: { text: string }) {
     }
 
     setIsSupported(true);
+    setLang(getActiveLang());
 
     const loadVoices = () => {
-      const voices = window.speechSynthesis.getVoices();
-      const best =
-        voices.find((v) => v.name.includes("Google हिन्दी")) ||
-        voices.find((v) => v.name.includes("Lekha")) ||
-        voices.find((v) => v.name.includes("Hemant")) ||
-        voices.find((v) => v.lang === "hi-IN") ||
-        voices.find((v) => v.lang.startsWith("hi"));
-      setHindiVoice(best || null);
+      setVoices(window.speechSynthesis.getVoices());
     };
 
     loadVoices();
@@ -86,10 +120,13 @@ export default function AudioPlayer({ text }: { text: string }) {
       return;
     }
 
+    const activeLang = langRef.current;
+    const voice = findVoice(voicesRef.current, activeLang);
+
     const u = new SpeechSynthesisUtterance(chunks[index]);
-    if (voiceRef.current) u.voice = voiceRef.current;
-    u.lang = "hi-IN";
-    u.rate = 0.9 * speedRef.current;
+    if (voice) u.voice = voice;
+    u.lang = activeLang === "en" ? "en-US" : "hi-IN";
+    u.rate = (activeLang === "en" ? 1 : 0.9) * speedRef.current;
     u.pitch = 1;
 
     u.onend = () => {
@@ -117,7 +154,17 @@ export default function AudioPlayer({ text }: { text: string }) {
       return;
     }
 
-    const chunks = splitIntoChunks(text);
+    const activeLang = getActiveLang();
+    setLang(activeLang);
+    langRef.current = activeLang;
+
+    let speechText = text;
+    if (activeLang === "en") {
+      const domText = getArticleTextFromDOM();
+      if (domText) speechText = domText;
+    }
+
+    const chunks = splitIntoChunks(speechText);
     chunksRef.current = chunks;
     currentChunkRef.current = 0;
     stoppedRef.current = false;
@@ -187,6 +234,8 @@ export default function AudioPlayer({ text }: { text: string }) {
     totalChunks > 0 ? Math.round((currentChunk / totalChunks) * 100) : 0;
   const estimatedTime = estimateListenTime(text, speed);
   const isActive = status === "playing" || status === "paused";
+  const label = lang === "en" ? "Listen Now" : "खबर सुनें (Listen Now)";
+  const langBadge = lang === "en" ? "EN" : "HI";
 
   return (
     <div
@@ -206,9 +255,12 @@ export default function AudioPlayer({ text }: { text: string }) {
               AI News Reader
             </p>
             <p className="text-sm md:text-base font-bold text-white">
-              खबर सुनें (Listen Now)
+              {label}
               <span className="ml-2 text-[10px] font-medium text-tv10-gold bg-white/10 px-2 py-0.5 rounded-full">
                 ~{estimatedTime} min
+              </span>
+              <span className="ml-1 text-[10px] font-medium text-white bg-tv10-red/80 px-2 py-0.5 rounded-full">
+                {langBadge}
               </span>
             </p>
           </div>
