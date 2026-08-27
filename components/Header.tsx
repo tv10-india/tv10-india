@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { FaSearch, FaMoon, FaSun, FaBars, FaTimes, FaFacebookF, FaTwitter, FaYoutube, FaInstagram } from "react-icons/fa";
+import { FaSearch, FaMoon, FaSun, FaBars, FaTimes, FaFacebookF, FaYoutube, FaInstagram, FaWhatsapp } from "react-icons/fa";
 import LanguageToggle from "@/components/LanguageToggle";
 
 export type Headline = { title: string; slug: string };
@@ -84,10 +84,10 @@ export default function Header({ initialHeadlines = [] }: HeaderProps): React.Re
       <div className="hidden md:flex bg-tv10-gold text-tv10-metal text-xs font-semibold py-1.5 px-6 justify-between items-center border-b border-amber-600/40">
         <div className="text-tv10-metal font-bold tracking-wide">{today}</div>
         <div className="flex items-center gap-2.5 text-sm">
-          <a href="#" aria-label="Facebook" className="hover:text-tv10-red transition"><FaFacebookF /></a>
-          <a href="#" aria-label="Twitter" className="hover:text-tv10-red transition"><FaTwitter /></a>
-          <a href="https://www.youtube.com/@TV10India" target="_blank" aria-label="YouTube" className="hover:text-tv10-red transition"><FaYoutube /></a>
-          <a href="#" aria-label="Instagram" className="hover:text-tv10-red transition"><FaInstagram /></a>
+          <a href="https://m.facebook.com/p/Tv10-India-100083383320196/" target="_blank" rel="noreferrer" aria-label="Facebook" className="hover:text-tv10-red transition"><FaFacebookF /></a>
+          <a href="https://whatsapp.com/channel/0029VaBYAMfCcW4sKXCT3V20" target="_blank" rel="noreferrer" aria-label="WhatsApp Channel" className="hover:text-tv10-red transition"><FaWhatsapp /></a>
+          <a href="https://www.youtube.com/@TV10India" target="_blank" rel="noreferrer" aria-label="YouTube" className="hover:text-tv10-red transition"><FaYoutube /></a>
+          <a href="https://www.instagram.com/tv10.india/" target="_blank" rel="noreferrer" aria-label="Instagram" className="hover:text-tv10-red transition"><FaInstagram /></a>
         </div>
       </div>
 
