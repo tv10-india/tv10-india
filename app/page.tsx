@@ -38,14 +38,6 @@ export default async function Home() {
     slug: item.slug?.current || "",
   }));
 
-  // LOGIC TO PREVENT DUPLICATES
-  // 1. Identify the Main Story (The one big on top)
-  const mainStoryId = news[0]?._id;
-
-  // 2. Create a "Clean List" for the bottom sections
-  // This removes the Main Story from the State Tabs so it doesn't repeat
-  const newsWithoutHero = news.filter((item: { _id: string }) => item._id !== mainStoryId);
-
   return (
     <main className="min-h-screen bg-tv10-cream dark:bg-tv10-dark">
       <Header initialHeadlines={headlines} />
@@ -56,8 +48,8 @@ export default async function Home() {
       {/* 2. HERO NEWS (Shows #1 Story Big + Next 4 on side) */}
       <HeroSection news={news} />
 
-      {/* 3. STATE TABS (Uses the clean list, so #1 story won't repeat here) */}
-      <StateTabs news={newsWithoutHero} />
+      {/* 3. STATE TABS (Filters the full latest-first feed for each region) */}
+      <StateTabs news={news} />
 
       <DharmaSection news={news} />
 
