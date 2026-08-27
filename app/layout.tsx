@@ -7,10 +7,31 @@ import GoogleTranslateScript from "@/components/GoogleTranslateScript";
 const inter = Inter({ subsets: ["latin"] });
 const adsenseClient = process.env.NEXT_PUBLIC_ADSENSE_CLIENT ?? "ca-pub-8748522674365627";
 const googleAnalyticsId = process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID;
+const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || "https://tv10-india.vercel.app").replace(/\/$/, "");
 
 export const metadata: Metadata = {
-  title: "TV10 India | Your Voice Your Choice",
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: "TV10 India",
+    template: "%s | TV10 India",
+  },
   description: "Latest breaking news from Uttar Pradesh, Uttarakhand, Delhi NCR and India. Get fast, trusted updates on politics, business, sports, and more.",
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    type: "website",
+    siteName: "TV10 India",
+    title: "TV10 India",
+    description: "Latest breaking news from Uttar Pradesh, Uttarakhand, Delhi NCR and India.",
+    images: [{ url: "/logo.png", alt: "TV10 India" }],
+  },
+  twitter: {
+    card: "summary",
+    title: "TV10 India",
+    description: "Latest breaking news from Uttar Pradesh, Uttarakhand, Delhi NCR and India.",
+    images: ["/logo.png"],
+  },
 };
 
 export default function RootLayout({
