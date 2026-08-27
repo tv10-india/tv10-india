@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { FaSearch, FaMoon, FaSun, FaBars, FaTimes, FaFacebookF, FaTwitter, FaYoutube, FaInstagram } from "react-icons/fa";
@@ -16,7 +16,7 @@ const fallbackHeadline: Headline = {
   slug: "",
 };
 
-export default function Header({ initialHeadlines }: HeaderProps) {
+export default function Header({ initialHeadlines = [] }: HeaderProps): React.ReactElement {
   const router = useRouter();
   const [darkMode, setDarkMode] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -103,17 +103,11 @@ export default function Header({ initialHeadlines }: HeaderProps) {
             <h1 className="text-4xl font-black tracking-tighter text-tv10-metal dark:text-white leading-none drop-shadow-sm">
               TV10 <span className="text-tv10-gold">INDIA</span>
             </h1>
-            <p className="text-[10px] text-gray-500 dark:text-gray-400 font-bold uppercase tracking-[0.2em] mt-0.5">
-              Your Voice Your Choice
-            </p>
           </div>
           <div className="md:hidden">
             <h1 className="text-2xl font-black tracking-tighter text-tv10-metal dark:text-white leading-none">
               TV10 <span className="text-tv10-gold">INDIA</span>
             </h1>
-            <p className="text-[8px] text-gray-500 dark:text-gray-400 font-bold uppercase tracking-[0.15em]">
-              Your Voice Your Choice
-            </p>
           </div>
         </Link>
 
