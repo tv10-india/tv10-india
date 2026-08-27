@@ -1,12 +1,10 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
 import { FaPlay, FaPause, FaStop, FaHeadphones } from "react-icons/fa";
 
 const SPEEDS = [0.75, 1, 1.25, 1.5] as const;
 type Speed = (typeof SPEEDS)[number];
-
-const HINDI_WORDS_PER_MINUTE = 130;
 
 function splitIntoChunks(text: string): string[] {
   const sentences = text.split(/(?<=[.?!।॥])\s+/);
@@ -25,33 +23,31 @@ function splitIntoChunks(text: string): string[] {
     }
   }
 
-  if (current.trim()) {
-    chunks.push(current.trim());
-  }
-
+  if (current.trim()) chunks.push(current.trim());
   return chunks.length > 0 ? chunks : [text];
 }
 
 function estimateListenTime(text: string, speed: Speed): number {
   const wordCount = text.split(/\s+/).filter(Boolean).length;
-  const minutes = wordCount / (HINDI_WORDS_PER_MINUTE * speed);
-  return Math.max(1, Math.round(minutes));
+  return Math.max(1, Math.round(wordCount / (130 * speed)));
 }
 
 export default function AudioPlayer({ text }: { text: string }) {
   const [isSupported, setIsSupported] = useState<boolean | null>(null);
   const [hindiVoice, setHindiVoice] = useState<SpeechSynthesisVoice | null>(null);
-
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [isPaused, setIsPaused] = useState(false);
+  const [status, setStatus] = useState<"idle" | "playing" | "paused">("idle");
+  const [speed, setSpeed] = useState<Speed>(1);
+  const [currentChunk, setCurrentChunk] = useState(0);
+  const [totalChunks, setTotalChunks] = useState(0);
 
   const chunksRef = useRef<string[]>([]);
   const currentChunkRef = useRef(0);
-  const [totalChunks, setTotalChunks] = useState(0);
-  const [completedChunks, setCompletedChunks] = useState(0);
+  const speedRef = useRef<Speed>(1);
+  const voiceRef = useRef<SpeechSynthesisVoice | null>(null);
+  const stoppedRef = useRef(false);
 
-  const [speed, setSpeed] = useState<Speed>(1);
-  const [estimatedTime, setEstimatedTime] = useState(0);
+  speedRef.current = speed;
+  voiceRef.current = hindiVoice;
 
   useEffect(() => {
     if (typeof window === "undefined" || !window.speechSynthesis) {
@@ -63,15 +59,13 @@ export default function AudioPlayer({ text }: { text: string }) {
 
     const loadVoices = () => {
       const voices = window.speechSynthesis.getVoices();
-
-      const bestVoice =
+      const best =
         voices.find((v) => v.name.includes("Google हिन्दी")) ||
         voices.find((v) => v.name.includes("Lekha")) ||
         voices.find((v) => v.name.includes("Hemant")) ||
         voices.find((v) => v.lang === "hi-IN") ||
         voices.find((v) => v.lang.startsWith("hi"));
-
-      setHindiVoice(bestVoice || null);
+      setHindiVoice(best || null);
     };
 
     loadVoices();
@@ -83,94 +77,84 @@ export default function AudioPlayer({ text }: { text: string }) {
     };
   }, []);
 
-  useEffect(() => {
-    setEstimatedTime(estimateListenTime(text, speed));
-  }, [text, speed]);
+  function speakFrom(index: number) {
+    const chunks = chunksRef.current;
+    if (index >= chunks.length || stoppedRef.current) {
+      setStatus("idle");
+      setCurrentChunk(0);
+      currentChunkRef.current = 0;
+      return;
+    }
 
-  const playChunk = useCallback(
-    (index: number) => {
-      const chunks = chunksRef.current;
-      if (index >= chunks.length) {
-        setIsPlaying(false);
-        setIsPaused(false);
-        setCompletedChunks(chunks.length);
-        return;
-      }
+    const u = new SpeechSynthesisUtterance(chunks[index]);
+    if (voiceRef.current) u.voice = voiceRef.current;
+    u.lang = "hi-IN";
+    u.rate = 0.9 * speedRef.current;
+    u.pitch = 1;
 
-      const utterance = new SpeechSynthesisUtterance(chunks[index]);
-      if (hindiVoice) utterance.voice = hindiVoice;
-      utterance.lang = "hi-IN";
-      utterance.rate = 0.9 * speed;
-      utterance.pitch = 1;
+    u.onend = () => {
+      if (stoppedRef.current) return;
+      const next = index + 1;
+      currentChunkRef.current = next;
+      setCurrentChunk(next);
+      speakFrom(next);
+    };
 
-      utterance.onend = () => {
-        const nextIndex = currentChunkRef.current + 1;
-        currentChunkRef.current = nextIndex;
-        setCompletedChunks(nextIndex);
-        playChunk(nextIndex);
-      };
+    u.onerror = () => {
+      if (stoppedRef.current) return;
+    };
 
-      utterance.onerror = (event) => {
-        if (event.error !== "interrupted" && event.error !== "canceled") {
-          console.error("SpeechSynthesis error:", event.error);
-        }
-        setIsPlaying(false);
-        setIsPaused(false);
-      };
+    currentChunkRef.current = index;
+    setCurrentChunk(index);
+    window.speechSynthesis.speak(u);
+  }
 
-      currentChunkRef.current = index;
-      window.speechSynthesis.speak(utterance);
-    },
-    [hindiVoice, speed]
-  );
-
-  const handlePlay = useCallback(() => {
-    if (isPaused) {
-      window.speechSynthesis.cancel();
-      setIsPaused(false);
-      setIsPlaying(true);
-      playChunk(currentChunkRef.current);
+  const handlePlay = () => {
+    if (status === "paused") {
+      stoppedRef.current = false;
+      setStatus("playing");
+      speakFrom(currentChunkRef.current);
       return;
     }
 
     const chunks = splitIntoChunks(text);
     chunksRef.current = chunks;
     currentChunkRef.current = 0;
+    stoppedRef.current = false;
     setTotalChunks(chunks.length);
-    setCompletedChunks(0);
+    setCurrentChunk(0);
+    setStatus("playing");
 
     window.speechSynthesis.cancel();
-    setIsPlaying(true);
-    setIsPaused(false);
-    playChunk(0);
-  }, [isPaused, text, playChunk]);
+    speakFrom(0);
+  };
 
-  const handlePause = useCallback(() => {
+  const handlePause = () => {
+    stoppedRef.current = true;
     window.speechSynthesis.cancel();
-    setIsPaused(true);
-    setIsPlaying(false);
-  }, []);
+    setStatus("paused");
+  };
 
-  const handleStop = useCallback(() => {
+  const handleStop = () => {
+    stoppedRef.current = true;
     window.speechSynthesis.cancel();
-    setIsPlaying(false);
-    setIsPaused(false);
+    setStatus("idle");
     currentChunkRef.current = 0;
-    setCompletedChunks(0);
-  }, []);
+    setCurrentChunk(0);
+  };
 
-  const handleSpeedChange = useCallback((newSpeed: Speed) => {
+  const handleSpeedChange = (newSpeed: Speed) => {
     setSpeed(newSpeed);
-  }, []);
+    speedRef.current = newSpeed;
 
-  const prevSpeedRef = useRef(speed);
-  useEffect(() => {
-    if (prevSpeedRef.current !== speed && isPlaying) {
+    if (status === "playing") {
+      stoppedRef.current = true;
       window.speechSynthesis.cancel();
-      playChunk(currentChunkRef.current);
+      stoppedRef.current = false;
+      setStatus("playing");
+      speakFrom(currentChunkRef.current);
     }
-    prevSpeedRef.current = speed;
-  }, [speed, isPlaying, playChunk]);
+  };
 
   if (isSupported === false) {
     return (
@@ -197,12 +181,12 @@ export default function AudioPlayer({ text }: { text: string }) {
     );
   }
 
-  if (isSupported === null) {
-    return null;
-  }
+  if (isSupported === null) return null;
 
   const progressPercent =
-    totalChunks > 0 ? Math.round((completedChunks / totalChunks) * 100) : 0;
+    totalChunks > 0 ? Math.round((currentChunk / totalChunks) * 100) : 0;
+  const estimatedTime = estimateListenTime(text, speed);
+  const isActive = status === "playing" || status === "paused";
 
   return (
     <div
@@ -213,7 +197,7 @@ export default function AudioPlayer({ text }: { text: string }) {
       <div className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-4">
           <div
-            className={`bg-tv10-red p-3 rounded-full shadow-md ${isPlaying ? "animate-pulse" : ""}`}
+            className={`bg-tv10-red p-3 rounded-full shadow-md ${status === "playing" ? "animate-pulse" : ""}`}
           >
             <FaHeadphones className="text-lg" />
           </div>
@@ -223,21 +207,19 @@ export default function AudioPlayer({ text }: { text: string }) {
             </p>
             <p className="text-sm md:text-base font-bold text-white">
               खबर सुनें (Listen Now)
-              {estimatedTime > 0 && (
-                <span className="ml-2 text-[10px] font-medium text-tv10-gold bg-white/10 px-2 py-0.5 rounded-full">
-                  ~{estimatedTime} min
-                </span>
-              )}
+              <span className="ml-2 text-[10px] font-medium text-tv10-gold bg-white/10 px-2 py-0.5 rounded-full">
+                ~{estimatedTime} min
+              </span>
             </p>
           </div>
         </div>
 
         <div className="flex gap-3">
-          {!isPlaying ? (
+          {status !== "playing" ? (
             <button
               onClick={handlePlay}
               className="bg-white text-tv10-red h-10 w-10 md:h-12 md:w-12 rounded-full flex items-center justify-center hover:scale-110 transition shadow-lg"
-              aria-label={isPaused ? "Resume playback" : "Play news article"}
+              aria-label={status === "paused" ? "Resume playback" : "Play news article"}
             >
               <FaPlay className="ml-1 text-sm md:text-lg" />
             </button>
@@ -251,7 +233,7 @@ export default function AudioPlayer({ text }: { text: string }) {
             </button>
           )}
 
-          {(isPlaying || isPaused) && (
+          {isActive && (
             <button
               onClick={handleStop}
               className="bg-gray-700 text-white h-10 w-10 md:h-12 md:w-12 rounded-full flex items-center justify-center hover:bg-red-600 transition shadow-lg"
@@ -263,7 +245,7 @@ export default function AudioPlayer({ text }: { text: string }) {
         </div>
       </div>
 
-      {(isPlaying || isPaused || completedChunks > 0) && totalChunks > 0 && (
+      {isActive && totalChunks > 0 && (
         <div
           className="mt-3 h-[3px] bg-white/30 rounded-full overflow-hidden"
           role="progressbar"
@@ -279,7 +261,7 @@ export default function AudioPlayer({ text }: { text: string }) {
         </div>
       )}
 
-      {(isPlaying || isPaused || completedChunks > 0) && (
+      {isActive && (
         <div className="mt-3 flex items-center gap-2">
           <span className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">
             Speed
