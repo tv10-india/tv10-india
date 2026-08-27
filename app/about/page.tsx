@@ -1,4 +1,3 @@
-import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 
 export default function AboutPage() {
@@ -13,7 +12,6 @@ export default function AboutPage() {
           <p>We are committed to timely reporting, clear context, and responsible journalism.</p>
         </div>
       </section>
-      <Footer />
     </main>
   );
 }
