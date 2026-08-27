@@ -1,4 +1,3 @@
-import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 
 export default function ContactPage() {
@@ -14,7 +13,6 @@ export default function ContactPage() {
           <p>Noida Sector 62, Uttar Pradesh, India - 201309</p>
         </div>
       </section>
-      <Footer />
     </main>
   );
 }
