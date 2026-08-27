@@ -2,16 +2,17 @@ import Link from "next/link";
 import Image from "next/image";
 import { urlFor } from "../sanityStudio/lib/sanity";
 import { FaPlay, FaYoutube } from "react-icons/fa";
+import type { NewsItem } from "../types/content";
 
 // Helper to extract YouTube ID
-function getYouTubeId(url: string) {
+function getYouTubeId(url?: string) {
   if (!url) return null;
   const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=|shorts\/|live\/)([^#&?]*).*/;
   const match = url.match(regExp);
   return (match && match[2].length === 11) ? match[2] : null;
 }
 
-export default function VideoSection({ news }: { news: any[] }) {
+export default function VideoSection({ news }: { news: NewsItem[] }) {
   // 1. Filter only posts that have a YouTube URL
   const videoNews = news.filter((item) => item.youtubeUrl).slice(0, 4);
 

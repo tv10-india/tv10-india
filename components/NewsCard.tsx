@@ -4,8 +4,9 @@ import { useRef, useState } from "react";
 import html2canvas from "html2canvas";
 import { FaDownload, FaExclamationTriangle, FaSpinner, FaWhatsapp } from "react-icons/fa";
 import { urlFor } from "../sanityStudio/lib/sanity";
+import type { NewsPost, SanityImage } from "../types/content";
 
-export default function NewsCard({ post }: { post: any }) {
+export default function NewsCard({ post }: { post: NewsPost }) {
   const cardRef = useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
@@ -19,7 +20,7 @@ export default function NewsCard({ post }: { post: any }) {
         : "text-[74px]";
 
   // Helper: Use our API Proxy to get the image safely
-  const getSafeImageUrl = (source: any) => {
+  const getSafeImageUrl = (source: SanityImage) => {
     const originalUrl = urlFor(source).url();
     // This calls our local API "Tunnel"
     return `/api/proxy-image?url=${encodeURIComponent(originalUrl)}`;

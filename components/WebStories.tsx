@@ -2,8 +2,9 @@ import Image from "next/image";
 import { urlFor } from "../sanityStudio/lib/sanity";
 import { FaBolt } from "react-icons/fa";
 import Link from "next/link";
+import type { WebStory } from "../types/content";
 
-export default function WebStories({ stories }: { stories: any[] }) {
+export default function WebStories({ stories }: { stories: WebStory[] }) {
   if (!stories || stories.length === 0) return null;
 
   return (

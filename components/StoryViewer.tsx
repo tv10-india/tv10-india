@@ -5,8 +5,9 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { FaTimes, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { urlFor } from "../sanityStudio/lib/sanity";
+import type { WebStory } from "../types/content";
 
-export default function StoryViewer({ story, nextStoryId, prevStoryId }: { story: any; nextStoryId?: string | null; prevStoryId?: string | null }) {
+export default function StoryViewer({ story, nextStoryId, prevStoryId }: { story: WebStory; nextStoryId?: string | null; prevStoryId?: string | null }) {
   const router = useRouter();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [progress, setProgress] = useState(0);
@@ -97,7 +98,7 @@ export default function StoryViewer({ story, nextStoryId, prevStoryId }: { story
 
         {/* PROGRESS BARS */}
         <div className="absolute top-0 left-0 w-full z-40 flex gap-1 px-2 pt-3">
-          {story.slides.map((_: any, i: number) => (
+          {story.slides.map((_, i: number) => (
             <div key={i} className="flex-1 h-[3px] bg-white/30 rounded-full overflow-hidden">
               <div
                 className="h-full bg-white rounded-full"

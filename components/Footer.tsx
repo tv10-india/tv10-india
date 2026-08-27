@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { FaFacebookF, FaYoutube, FaInstagram, FaArrowUp, FaEnvelope, FaMapMarkerAlt, FaWhatsapp, FaLinkedinIn } from "react-icons/fa";

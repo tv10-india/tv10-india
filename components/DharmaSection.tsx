@@ -2,8 +2,9 @@
 import Image from "next/image";
 import { urlFor } from "../sanityStudio/lib/sanity";
 import { FaOm, FaStar } from "react-icons/fa";
+import type { NewsItem } from "../types/content";
 
-export default function DharmaSection({ news }: { news: any[] }) {
+export default function DharmaSection({ news }: { news: NewsItem[] }) {
   const dharmaNews = news.filter((item) => item.category === "dharma").slice(0, 4);
 
   if (dharmaNews.length === 0) return null;

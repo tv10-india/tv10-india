@@ -2,15 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { FaBriefcase, FaGlobeAsia, FaTrophy } from "react-icons/fa";
 import { urlFor } from "../sanityStudio/lib/sanity";
-
-type NewsItem = {
-  _id: string;
-  title: string;
-  category?: string;
-  slug?: { current?: string };
-  mainImage?: unknown;
-  publishedAt?: string;
-};
+import type { NewsItem } from "../types/content";
 
 type CategoryConfig = {
   label: string;

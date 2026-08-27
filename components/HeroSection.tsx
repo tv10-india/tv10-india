@@ -2,8 +2,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { urlFor } from "../sanityStudio/lib/sanity";
 import { FaPlay, FaClock, FaBolt } from "react-icons/fa";
+import type { NewsItem } from "../types/content";
 
-export default function HeroSection({ news }: { news: any[] }) {
+export default function HeroSection({ news }: { news: NewsItem[] }) {
   if (!news || news.length === 0) return null;
 
   const mainStory = news[0];

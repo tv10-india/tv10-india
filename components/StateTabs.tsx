@@ -5,8 +5,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { urlFor } from "../sanityStudio/lib/sanity";
 import { FaMapMarkerAlt } from "react-icons/fa";
+import type { NewsItem } from "../types/content";
 
-export default function StateTabs({ news }: { news: any[] }) {
+export default function StateTabs({ news }: { news: NewsItem[] }) {
   const [activeState, setActiveState] = useState("up");
 
   // DEFINITION: What text should we look for in the database?
@@ -50,7 +51,7 @@ export default function StateTabs({ news }: { news: any[] }) {
     // Convert DB category to lowercase to avoid Case Sensitive errors
     const dbCategory = item.category ? item.category.toLowerCase() : "";
     return currentTab?.match.includes(dbCategory);
-  }).slice(0, activeState === "national" ? 6 : 3);
+  }).slice(0, 4);
 
   return (
     <section className="container mx-auto px-4 py-12">
@@ -81,7 +82,7 @@ export default function StateTabs({ news }: { news: any[] }) {
       </div>
 
       {/* NEWS CARDS GRID */}
-      <div className={`grid grid-cols-1 md:grid-cols-3 ${activeState === "national" ? "lg:grid-cols-6" : ""} gap-8 animate-fadeIn`}>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 animate-fadeIn">
         
         {filteredNews.length > 0 ? (
           filteredNews.map((story) => (

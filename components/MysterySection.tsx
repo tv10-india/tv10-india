@@ -2,8 +2,9 @@ import Link from "next/link";
 import Image from "next/image";
 import { urlFor } from "../sanityStudio/lib/sanity";
 import { FaEye } from "react-icons/fa";
+import type { NewsItem } from "../types/content";
 
-export default function MysterySection({ news }: { news: any[] }) {
+export default function MysterySection({ news }: { news: NewsItem[] }) {
   // Filter for 'mystery' category
   const mysteryNews = news.filter((item) => item.category === "mystery").slice(0, 3);
 
