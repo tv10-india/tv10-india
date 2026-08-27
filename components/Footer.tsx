@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { FaFacebookF, FaTwitter, FaYoutube, FaInstagram, FaArrowUp, FaEnvelope, FaMapMarkerAlt, FaPhone } from "react-icons/fa";
+import { FaFacebookF, FaYoutube, FaInstagram, FaArrowUp, FaEnvelope, FaMapMarkerAlt, FaWhatsapp, FaLinkedinIn } from "react-icons/fa";
+import { FaThreads } from "react-icons/fa6";
 
 export default function Footer() {
 
@@ -32,17 +33,23 @@ export default function Footer() {
               TV10 India is a leading digital news platform delivering trusted, fast, and unbiased news from Uttar Pradesh, Uttarakhand, Delhi, and across India.
             </p>
             <div className="flex gap-3">
-              <a href="#" className="w-10 h-10 rounded-full bg-gray-800/80 flex items-center justify-center hover:bg-[#1877F2] hover:text-white transition duration-300 border border-gray-700/50">
+              <a href="https://m.facebook.com/p/Tv10-India-100083383320196/" target="_blank" rel="noreferrer" aria-label="Facebook" className="w-10 h-10 rounded-full bg-gray-800/80 flex items-center justify-center hover:bg-[#1877F2] hover:text-white transition duration-300 border border-gray-700/50">
                 <FaFacebookF />
               </a>
-              <a href="#" className="w-10 h-10 rounded-full bg-gray-800/80 flex items-center justify-center hover:bg-[#1DA1F2] hover:text-white transition duration-300 border border-gray-700/50">
-                <FaTwitter />
+              <a href="https://whatsapp.com/channel/0029VaBYAMfCcW4sKXCT3V20" target="_blank" rel="noreferrer" aria-label="WhatsApp Channel" className="w-10 h-10 rounded-full bg-gray-800/80 flex items-center justify-center hover:bg-[#25D366] hover:text-white transition duration-300 border border-gray-700/50">
+                <FaWhatsapp />
               </a>
-              <a href="https://www.youtube.com/@TV10India" target="_blank" className="w-10 h-10 rounded-full bg-gray-800/80 flex items-center justify-center hover:bg-[#FF0000] hover:text-white transition duration-300 border border-gray-700/50">
+              <a href="https://www.youtube.com/@TV10India" target="_blank" rel="noreferrer" aria-label="YouTube" className="w-10 h-10 rounded-full bg-gray-800/80 flex items-center justify-center hover:bg-[#FF0000] hover:text-white transition duration-300 border border-gray-700/50">
                 <FaYoutube />
               </a>
-              <a href="#" className="w-10 h-10 rounded-full bg-gray-800/80 flex items-center justify-center hover:bg-[#E4405F] hover:text-white transition duration-300 border border-gray-700/50">
+              <a href="https://www.instagram.com/tv10.india/" target="_blank" rel="noreferrer" aria-label="Instagram" className="w-10 h-10 rounded-full bg-gray-800/80 flex items-center justify-center hover:bg-[#E4405F] hover:text-white transition duration-300 border border-gray-700/50">
                 <FaInstagram />
+              </a>
+              <a href="https://www.threads.net/@tv10.india" target="_blank" rel="noreferrer" aria-label="Threads" className="w-10 h-10 rounded-full bg-gray-800/80 flex items-center justify-center hover:bg-white hover:text-black transition duration-300 border border-gray-700/50">
+                <FaThreads />
+              </a>
+              <a href="https://www.linkedin.com/company/tv10-india-official/" target="_blank" rel="noreferrer" aria-label="LinkedIn" className="w-10 h-10 rounded-full bg-gray-800/80 flex items-center justify-center hover:bg-[#0A66C2] hover:text-white transition duration-300 border border-gray-700/50">
+                <FaLinkedinIn />
               </a>
             </div>
           </div>
@@ -81,12 +88,8 @@ export default function Footer() {
                 <span>Noida Sector 62, Uttar Pradesh,<br />India - 201309</span>
               </li>
               <li className="flex items-center gap-3">
-                <FaPhone className="text-tv10-red" />
-                <span>+91 98765 43210</span>
-              </li>
-              <li className="flex items-center gap-3">
                 <FaEnvelope className="text-tv10-red" />
-                <span>editor@tv10india.com</span>
+                <a href="mailto:tvtenindia@gmail.com" className="hover:text-tv10-gold transition">tvtenindia@gmail.com</a>
               </li>
             </ul>
           </div>
