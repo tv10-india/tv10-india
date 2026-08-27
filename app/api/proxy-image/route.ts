@@ -1,37 +1,30 @@
-import { NextResponse } from "next/server";
-import { client } from "@/sanityStudio/lib/sanity";
+import { NextRequest, NextResponse } from "next/server";
 
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
+export async function GET(req: NextRequest) {
+  const url = req.nextUrl.searchParams.get("url");
+  if (!url) return new NextResponse("Missing URL", { status: 400 });
 
-export async function GET() {
   try {
-    const headlines = await client.fetch(
-      `*[_type == "post" && defined(title) && defined(slug.current)] | order(publishedAt desc)[0...15]{
-        title,
-        "slug": slug.current
-      }`,
-      {},
-      { cache: "no-store" }
-    );
+    const requestedUrl = new URL(url);
+    if (requestedUrl.protocol !== "https:" || requestedUrl.hostname !== "cdn.sanity.io") {
+      return new NextResponse("Image host not allowed", { status: 403 });
+    }
 
-    const cleaned = (headlines || [])
-      .map((h: any) => ({
-        title: h.title,
-        slug: (h.slug || "").toString().trim().replace(/^\/+|\/+$/g, ""),
-      }))
-      .filter((h: any) => h.title && h.slug);
+    const response = await fetch(requestedUrl, { redirect: "manual" });
+    if (!response.ok) {
+      return new NextResponse("Image fetch failed", { status: response.status });
+    }
 
-    return NextResponse.json(
-      { headlines: cleaned },
-      {
-        headers: {
-          "Cache-Control": "no-store, max-age=0, must-revalidate",
-        },
-      }
-    );
-  } catch (error) {
-    console.error("Error fetching headlines:", error);
-    return NextResponse.json({ headlines: [] }, { status: 200 });
+    const blob = await response.blob();
+
+    return new NextResponse(blob, {
+      headers: {
+        "Content-Type": response.headers.get("Content-Type") || "image/jpeg",
+        "Access-Control-Allow-Origin": "*",
+        "Cache-Control": "public, max-age=31536000, immutable",
+      },
+    });
+  } catch {
+    return new NextResponse("Error fetching image", { status: 500 });
   }
 }
