@@ -1,12 +1,12 @@
 import { client } from "../sanityStudio/lib/sanity";
-import Header from "@/components/Header";
+import Header, { Headline } from "@/components/Header";
 import HeroSection from "@/components/HeroSection";
 import StateTabs from "@/components/StateTabs";
 import WebStories from "@/components/WebStories";
-import Footer from "@/components/Footer"; 
 import DharmaSection from "@/components/DharmaSection";
 import VideoSection from "@/components/VideoSection";
 import MysterySection from "@/components/MysterySection";
+import CategoryNewsSection from "@/components/CategoryNewsSection";
 
 // Updated Query to fetch @/components/MysterySectionicates
 async function getData() {
@@ -32,17 +32,23 @@ async function getData() {
 export default async function Home() {
   const { news, stories } = await getData();
 
+  // Extract headlines for header ticker
+  const headlines: Headline[] = (news || []).slice(0, 10).map((item: { title: string; slug?: { current?: string } }) => ({
+    title: item.title,
+    slug: item.slug?.current || "",
+  }));
+
   // LOGIC TO PREVENT DUPLICATES
   // 1. Identify the Main Story (The one big on top)
   const mainStoryId = news[0]?._id;
 
   // 2. Create a "Clean List" for the bottom sections
   // This removes the Main Story from the State Tabs so it doesn't repeat
-  const newsWithoutHero = news.filter((item: any) => item._id !== mainStoryId);
+  const newsWithoutHero = news.filter((item: { _id: string }) => item._id !== mainStoryId);
 
   return (
     <main className="min-h-screen bg-tv10-cream dark:bg-tv10-dark">
-      <Header />
+      <Header initialHeadlines={headlines} />
       
       {/* 1. VISUAL STORIES */}
       <WebStories stories={stories} />
@@ -54,6 +60,12 @@ export default async function Home() {
       <StateTabs news={newsWithoutHero} />
 
       <DharmaSection news={news} />
+
+      <CategoryNewsSection news={news} category="business" />
+
+      <CategoryNewsSection news={news} category="sports" />
+
+      <CategoryNewsSection news={news} category="world" />
 
       <VideoSection news={news} />
 
