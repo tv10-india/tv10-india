@@ -1,7 +1,7 @@
-import type { Config } from "tailwindcss";
+﻿import type { Config } from "tailwindcss";
 
 const config: Config = {
-  darkMode: 'class', // Enables the Dark/Light toggle
+  darkMode: 'class',
   content: [
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
@@ -11,12 +11,12 @@ const config: Config = {
     extend: {
       colors: {
         tv10: {
-          gold: '#FFC107',    // Bright Yellow (Map color)
-          red: '#D32F2F',     // Deep Red (Play Button/Live)
-          metal: '#37474F',   // Dark Grey ring (Header/Footer)
-          silver: '#CFD8DC',  // Light Grey (Borders)
-          cream: '#FAFAFA',   // Light Mode Background (Paper feel)
-          dark: '#121212',    // Dark Mode Background
+          gold: '#FFC107',
+          red: '#D32F2F',
+          metal: '#37474F',
+          silver: '#CFD8DC',
+          cream: '#FAFAFA',
+          dark: '#121212',
         },
       },
       fontFamily: {
@@ -24,13 +24,18 @@ const config: Config = {
       },
       animation: {
         'ticker': 'ticker 30s linear infinite',
+        'fadeIn': 'fadeIn 0.5s ease-out forwards',
       },
       keyframes: {
         ticker: {
           '0%': { transform: 'translateX(100%)' },
           '100%': { transform: 'translateX(-100%)' },
-        }
-      }
+        },
+        fadeIn: {
+          '0%': { opacity: '0', transform: 'translateY(12px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+      },
     },
   },
   plugins: [],
