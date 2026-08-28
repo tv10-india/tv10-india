@@ -5,6 +5,8 @@ import Header, { Headline } from "@/components/Header";
 import { notFound } from "next/navigation";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 
+export const revalidate = 60;
+
 const POSTS_PER_PAGE = 9;
 
 const categoryMap: { [key: string]: string } = {
