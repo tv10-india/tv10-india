@@ -22,14 +22,41 @@ async function getData() {
     },
     "stories": *[_type == "webStory"] | order(_createdAt desc) [0...6] {
       _id, title, slides
+    },
+    "dharma": *[_type == "post" && category == "dharma"] | order(publishedAt desc) [0...4] {
+      _id, title, slug, category, mainImage, youtubeUrl, publishedAt
+    },
+    "business": *[_type == "post" && category == "business"] | order(publishedAt desc) [0...4] {
+      _id, title, slug, category, mainImage, youtubeUrl, publishedAt
+    },
+    "sports": *[_type == "post" && category == "sports"] | order(publishedAt desc) [0...4] {
+      _id, title, slug, category, mainImage, youtubeUrl, publishedAt
+    },
+    "world": *[_type == "post" && category == "world"] | order(publishedAt desc) [0...4] {
+      _id, title, slug, category, mainImage, youtubeUrl, publishedAt
+    },
+    "videos": *[_type == "post" && defined(youtubeUrl)] | order(publishedAt desc) [0...4] {
+      _id, title, slug, category, mainImage, youtubeUrl, publishedAt
+    },
+    "mystery": *[_type == "post" && category == "mystery"] | order(publishedAt desc) [0...3] {
+      _id, title, slug, category, mainImage, youtubeUrl, publishedAt
     }
   }`;
 
-  return client.fetch<{ news: NewsItem[]; stories: WebStory[] }>(query, {}, { next: { revalidate: 60 } });
+  return client.fetch<{
+    news: NewsItem[];
+    stories: WebStory[];
+    dharma: NewsItem[];
+    business: NewsItem[];
+    sports: NewsItem[];
+    world: NewsItem[];
+    videos: NewsItem[];
+    mystery: NewsItem[];
+  }>(query, {}, { next: { revalidate: 60 } });
 }
 
 export default async function Home() {
-  const { news, stories } = await getData();
+  const { news, stories, dharma, business, sports, world, videos, mystery } = await getData();
 
   // Extract headlines for header ticker
   const headlines: Headline[] = (news || []).slice(0, 10).map((item: NewsItem) => ({
@@ -50,17 +77,17 @@ export default async function Home() {
       {/* 3. STATE TABS (Filters the full latest-first feed for each region) */}
       <StateTabs news={news} />
 
-      <DharmaSection news={news} />
+      <DharmaSection news={dharma} />
 
-      <CategoryNewsSection news={news} category="business" />
+      <CategoryNewsSection news={business} category="business" />
 
-      <CategoryNewsSection news={news} category="sports" />
+      <CategoryNewsSection news={sports} category="sports" />
 
-      <CategoryNewsSection news={news} category="world" />
+      <CategoryNewsSection news={world} category="world" />
 
-      <VideoSection news={news} />
+      <VideoSection news={videos} />
 
-      <MysterySection news={news} />
+      <MysterySection news={mystery} />
 
     </main>
   );
