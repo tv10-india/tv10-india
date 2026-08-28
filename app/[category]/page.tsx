@@ -2,6 +2,7 @@ import { client, urlFor } from "../../sanityStudio/lib/sanity";
 import Image from "next/image";
 import Link from "next/link";
 import Header, { Headline } from "@/components/Header";
+import { notFound } from "next/navigation";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 
 const POSTS_PER_PAGE = 9;
@@ -51,6 +52,9 @@ export default async function CategoryPage({ params, searchParams }: Props) {
   const resolvedSearchParams = await searchParams;
   
   const categoryName = resolvedParams.category;
+  if (!categoryMap[categoryName]) {
+    notFound();
+  }
   const currentPage = Number(resolvedSearchParams.page) || 1;
 
   const data = await getCategoryNews(categoryName, currentPage);
