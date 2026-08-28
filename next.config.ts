@@ -7,9 +7,9 @@ const nextConfig = {
         hostname: 'cdn.sanity.io',
       },
     ],
-    // This tells Next.js to let Sanity handle the image resizing
-    // It fixes the "Private IP" error instantly.
-    unoptimized: true, 
+    // Serve images directly from Sanity's CDN, which does its own resizing.
+    loader: 'custom',
+    loaderFile: './sanityImageLoader.ts',
   },
 };
 
