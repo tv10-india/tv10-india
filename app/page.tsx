@@ -9,25 +9,23 @@ import MysterySection from "@/components/MysterySection";
 import CategoryNewsSection from "@/components/CategoryNewsSection";
 import type { NewsItem, WebStory } from "../types/content";
 
-// Updated Query to fetch @/components/MysterySectionicates
 async function getData() {
   const query = `{
-    "news": *[_type == "post"] | order(publishedAt desc) {
+    "news": *[_type == "post"] | order(publishedAt desc) [0...50] {
       _id,
-      title, 
-      slug, 
-      category, 
-      mainImage, 
-      youtubeUrl, 
+      title,
+      slug,
+      category,
+      mainImage,
+      youtubeUrl,
       publishedAt
     },
     "stories": *[_type == "webStory"] | order(_createdAt desc) [0...6] {
       _id, title, slides
     }
   }`;
-  
-  // Disable cache so you see new posts instantly
-  return client.fetch<{ news: NewsItem[]; stories: WebStory[] }>(query, {}, { next: { revalidate: 0 } }); 
+
+  return client.fetch<{ news: NewsItem[]; stories: WebStory[] }>(query, {}, { next: { revalidate: 60 } });
 }
 
 export default async function Home() {
