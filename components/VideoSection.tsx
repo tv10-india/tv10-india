@@ -32,7 +32,7 @@ export default function VideoSection({ news }: { news: NewsItem[] }) {
                Watch <span className="text-red-600">TV10</span>
              </h3>
           </div>
-          <a href="https://www.youtube.com/@TV10India" target="_blank" className="text-xs font-bold border border-gray-600 px-4 py-2 rounded-full hover:bg-red-600 hover:border-red-600 transition">
+          <a href="https://www.youtube.com/@TV10India" target="_blank" rel="noreferrer" className="text-xs font-bold border border-gray-600 px-4 py-2 rounded-full hover:bg-red-600 hover:border-red-600 transition">
             VISIT CHANNEL
           </a>
         </div>

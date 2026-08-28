@@ -21,7 +21,7 @@ export default function GoogleTranslateScript() {
     // 2. Load the Script
     if (!document.querySelector("#google-translate-script")) {
       const script = document.createElement("script");
-      script.src = "//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
+      script.src = "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
       script.id = "google-translate-script";
       script.async = true;
       document.body.appendChild(script);

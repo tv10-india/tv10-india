@@ -144,13 +144,14 @@ export default function Header({ initialHeadlines = [] }: HeaderProps): React.Re
           {/* Theme */}
           <button
             onClick={toggleTheme}
+            aria-label="Toggle dark mode"
             className="p-2.5 rounded-full bg-gray-100 dark:bg-gray-800 text-tv10-metal dark:text-white hover:bg-gray-200 transition shadow-sm shrink-0"
           >
             {darkMode ? <FaSun className="text-sm md:text-base" /> : <FaMoon className="text-sm md:text-base" />}
           </button>
 
           {/* Mobile Menu */}
-          <button className="md:hidden text-2xl text-tv10-metal dark:text-white shrink-0 ml-1" onClick={() => setMenuOpen(!menuOpen)}>
+          <button className="md:hidden text-2xl text-tv10-metal dark:text-white shrink-0 ml-1" aria-label="Toggle menu" onClick={() => setMenuOpen(!menuOpen)}>
             {menuOpen ? <FaTimes /> : <FaBars />}
           </button>
         </div>

@@ -128,7 +128,7 @@ export default function NewsCard({ post }: { post: NewsPost }) {
                        {new Date(post.publishedAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}
                     </p>
                     <p className="text-3xl font-black tracking-tight text-tv10-metal">
-                     tv10-india.vercel.app
+                     tv10india.com
                     </p>
                   </div>
                   <div className="text-right">

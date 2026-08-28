@@ -1,12 +1,15 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 export default function AdBanner() {
-  
+  const containerRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
+    const el = containerRef.current;
+    if (!el || el.offsetWidth === 0) return;
+
     try {
-      // This function calls Google to say: "Hey, fill this box with an ad now!"
       ((window as any).adsbygoogle = (window as any).adsbygoogle || []).push({});
     } catch (err) {
       console.error("AdSense Error:", err);
@@ -14,14 +17,13 @@ export default function AdBanner() {
   }, []);
 
   return (
-    <div className="my-6 mx-auto overflow-hidden text-center bg-gray-50 min-h-[100px] flex justify-center items-center">
-      {/* 2. DISPLAY THE AD SLOT */}
+    <div ref={containerRef} className="my-6 w-full overflow-hidden text-center bg-gray-50 dark:bg-gray-900 min-h-[100px]">
       <ins
         className="adsbygoogle"
-        style={{ display: "block" }}
-        data-ad-client="ca-pub-8748522674365627" // <--- YOUR PUBLISHER ID
-        data-ad-slot="5172933029"                // <--- YOUR SLOT ID
-        data-ad-format="auto"                    // <--- Allows Google to pick the best size
+        style={{ display: "block", width: "100%" }}
+        data-ad-client="ca-pub-8748522674365627"
+        data-ad-slot="5172933029"
+        data-ad-format="auto"
         data-full-width-responsive="true"
       ></ins>
     </div>
