@@ -11,6 +11,8 @@ import NewsCard from "@/components/NewsCard"; // Ensure this is imported
 import WhatsAppShareButton from "@/components/WhatsAppShareButton";
 import { FaYoutube, FaClock, FaFire, FaLayerGroup } from "react-icons/fa";
 
+export const revalidate = 60;
+
 // 1. RICH TEXT STYLING
 const RichTextComponents = {
   block: {
