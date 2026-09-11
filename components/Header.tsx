@@ -75,7 +75,7 @@ export default function Header({ initialHeadlines = [] }: HeaderProps): React.Re
     }
   };
 
-  const menuItems = ['HOME', 'UTTAR PRADESH', 'UTTARAKHAND', 'DELHI', 'NATIONAL', 'WORLD', 'DHARMA', 'BUSINESS', 'SPORTS', 'VIDEOS'];
+  const menuItems = ['HOME', 'UTTAR PRADESH', 'UTTARAKHAND', 'DELHI', 'NATIONAL', 'WORLD', 'DHARMA', 'BUSINESS', 'SPORTS', 'VIDEOS', 'WEB STORIES'];
 
   return (
     <header className="sticky top-0 z-50 shadow-2xl">
