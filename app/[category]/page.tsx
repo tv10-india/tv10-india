@@ -16,23 +16,8 @@ export const revalidate = 60;
 
 const siteUrl = SITE_URL;
 
-export const revalidate = 60;
-
 const POSTS_PER_PAGE = 9;
 
-<<<<<<< HEAD
-const categoryMap: { [key: string]: string } = {
-  "uttar-pradesh": "up",
-  "uttarakhand": "uk",
-  "delhi": "delhi",
-  "national": "national",
-  "world": "world",
-  "dharma": "dharma",
-  "business": "business",
-  "sports": "sports",
-  "videos": "videos"
-};
-=======
 /**
  * How many article cards precede the in-feed ad.
  *
@@ -43,10 +28,6 @@ const categoryMap: { [key: string]: string } = {
 const IN_FEED_AFTER_CARDS = 3;
 
 const categoryMap = CATEGORY_SLUG_TO_CODE;
-
-// National combines every state category into one feed
-const NATIONAL_CODES = ["up", "uk", "delhi", "national"];
->>>>>>> 176d453 (Update V1.5)
 
 // National combines every state category into one feed
 const NATIONAL_CODES = ["up", "uk", "delhi", "national"];
@@ -62,17 +43,10 @@ async function getCategoryNews(category: string, page: number) {
 
   const query = `
     {
-<<<<<<< HEAD
-      "posts": *[_type == "post" && ${filter}] | order(publishedAt desc) [$start...$end] {
-        title, slug, mainImage, publishedAt, category
-      },
-      "total": count(*[_type == "post" && ${filter}])
-=======
       "posts": *[${LIVE_POST_FILTER} && ${filter}] | ${LIVE_POST_ORDER} [$start...$end] {
         title, slug, mainImage, publishedAt, category, isBreaking
       },
       "total": count(*[${LIVE_POST_FILTER} && ${filter}])
->>>>>>> 176d453 (Update V1.5)
     }
   `;
   return client.fetch(query, { dbCode, dbCodes: NATIONAL_CODES, start, end });
@@ -134,11 +108,7 @@ export default async function CategoryPage({ params, searchParams }: Props) {
         {/* PAGE TITLE (Centered) */}
         <div className="flex flex-col items-center mb-10 border-b-4 border-tv10-red pb-4 max-w-2xl mx-auto text-center">
           <h1 className="text-4xl md:text-5xl font-black uppercase text-tv10-metal dark:text-white tracking-tighter mb-2">
-<<<<<<< HEAD
-            {categoryName.replace(/-/g, ' ')} News
-=======
             {categoryHeading(categoryMap[categoryName])}
->>>>>>> 176d453 (Update V1.5)
           </h1>
           <span className="text-sm text-gray-500 font-bold bg-gray-200 dark:bg-gray-800 px-3 py-1 rounded-full">
             Page {currentPage} of {totalPages}
@@ -154,14 +124,9 @@ export default async function CategoryPage({ params, searchParams }: Props) {
           <>
             {/* Added 'justify-center' to center the whole grid if few items exist */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-center">
-<<<<<<< HEAD
-              {posts.map((story: CategoryPost) => (
-                <Link href={`/news/${story.slug?.current || ""}`} key={story.slug?.current || story.title} className="group h-full max-w-md mx-auto w-full">
-=======
               {posts.map((story: CategoryPost, index: number) => (
                 <Fragment key={story.slug?.current || story.title}>
                   <Link href={`/news/${story.slug?.current || ""}`} className="group h-full max-w-md mx-auto w-full">
->>>>>>> 176d453 (Update V1.5)
                   <div className="bg-white dark:bg-tv10-metal rounded-2xl shadow-md border border-gray-100 dark:border-gray-700 overflow-hidden hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 h-full flex flex-col">
                     
                     {/* Image Container */}
