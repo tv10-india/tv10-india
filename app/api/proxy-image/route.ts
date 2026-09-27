@@ -1,6 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 
+<<<<<<< HEAD
 const ALLOWED_CONTENT_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif", "image/svg+xml"];
+=======
+// SVG is deliberately absent. It is an executable document format — it can
+// carry <script> — and this route replays whatever it fetches from the site's
+// own origin, so allowing it would turn any SVG reachable on the Sanity CDN
+// into stored XSS against tv10india.com. Everything this route is actually
+// asked for is a photograph, so nothing legitimate is lost.
+const ALLOWED_CONTENT_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif"];
+>>>>>>> 176d453 (Update V1.5)
 
 export async function GET(req: NextRequest) {
   const url = req.nextUrl.searchParams.get("url");
@@ -25,7 +34,11 @@ export async function GET(req: NextRequest) {
     const blob = await response.blob();
 
     const origin = req.headers.get("Origin") || "";
+<<<<<<< HEAD
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://tv10-india.vercel.app";
+=======
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.tv10india.com";
+>>>>>>> 176d453 (Update V1.5)
     const allowedOrigin = origin && new URL(siteUrl).origin === origin ? origin : new URL(siteUrl).origin;
 
     return new NextResponse(blob, {

@@ -1,7 +1,15 @@
+<<<<<<< HEAD
 import { client, urlFor } from "../../sanityStudio/lib/sanity";
 import Image from "next/image";
 import Link from "next/link";
 import Header from "@/components/Header";
+=======
+import { client, urlFor, getImageUrl } from "../../sanityStudio/lib/sanity";
+import Image from "next/image";
+import Link from "next/link";
+import Header, { Headline } from "@/components/Header";
+import { LIVE_POST_FILTER, LIVE_POST_ORDER_BY_DATE } from "@/lib/posts";
+>>>>>>> 176d453 (Update V1.5)
 import { FaSearch } from "react-icons/fa";
 
 async function searchNews(query: string) {
@@ -9,7 +17,11 @@ async function searchNews(query: string) {
   if (!normalizedQuery) return [];
   const groqQuery = `
     *[
+<<<<<<< HEAD
       _type == "post" &&
+=======
+      ${LIVE_POST_FILTER} &&
+>>>>>>> 176d453 (Update V1.5)
       (
         title match $searchTerm ||
         category match $searchTerm ||
@@ -26,11 +38,19 @@ async function searchNews(query: string) {
           category == "videos" => "videos",
           category == "mystery" => "mystery adbhut",
           category == "lifestyle" => "lifestyle",
+<<<<<<< HEAD
+=======
+          category == "entertainment" => "entertainment",
+>>>>>>> 176d453 (Update V1.5)
           category == "web-stories" => "web stories",
           ""
         ) match $searchTerm
       )
+<<<<<<< HEAD
     ] | order(publishedAt desc) [0...20] {
+=======
+    ] | ${LIVE_POST_ORDER_BY_DATE} [0...20] {
+>>>>>>> 176d453 (Update V1.5)
       title, slug, mainImage, publishedAt, category
     }
   `;
@@ -46,9 +66,20 @@ export default async function SearchPage({ searchParams }: Props) {
   const query = resolvedSearchParams.q || "";
   const results = await searchNews(query);
 
+<<<<<<< HEAD
   return (
     <main className="min-h-screen bg-tv10-cream dark:bg-tv10-dark">
       <Header />
+=======
+  const headlines: Headline[] = (results || []).map((story: { title: string; slug?: { current?: string } }) => ({
+    title: story.title,
+    slug: story.slug?.current || "",
+  }));
+
+  return (
+    <main className="min-h-screen bg-tv10-cream dark:bg-tv10-dark">
+      <Header initialHeadlines={headlines} />
+>>>>>>> 176d453 (Update V1.5)
 
       <div className="container mx-auto px-4 py-10">
 
@@ -75,6 +106,7 @@ export default async function SearchPage({ searchParams }: Props) {
               <Link href={`/news/${story.slug.current}`} key={story.slug.current} className="group h-full max-w-md mx-auto w-full">
                 <div className="bg-white dark:bg-tv10-metal rounded-2xl shadow-md border border-gray-100 dark:border-gray-700 overflow-hidden hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 h-full flex flex-col">
                   <div className="relative w-full aspect-video overflow-hidden bg-gray-200">
+<<<<<<< HEAD
                     {story.mainImage ? (
                       <Image
                         src={urlFor(story.mainImage).url()}
@@ -85,6 +117,14 @@ export default async function SearchPage({ searchParams }: Props) {
                     ) : (
                       <div className="w-full h-full flex items-center justify-center text-gray-400">No Image</div>
                     )}
+=======
+                    <Image
+                      src={getImageUrl(story.mainImage)}
+                      alt={story.title}
+                      fill
+                      className={story.mainImage ? "object-cover group-hover:scale-105 transition duration-700" : "object-contain p-8 opacity-60"}
+                    />
+>>>>>>> 176d453 (Update V1.5)
                     <span className="absolute bottom-2 right-2 bg-tv10-red text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase shadow-lg">
                       {story.category}
                     </span>

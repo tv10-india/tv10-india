@@ -10,7 +10,11 @@ export default function ContactPage() {
           <p>For news tips, corrections, support, or general enquiries, contact the TV10 India team.</p>
           <p><a className="font-bold text-tv10-red hover:underline" href="mailto:editor@tv10india.com">editor@tv10india.com</a></p>
           <p>Phone: <a className="font-bold text-tv10-red hover:underline" href="tel:+919876543210">+91 98765 43210</a></p>
+<<<<<<< HEAD
           <p>Noida Sector 62, Uttar Pradesh, India - 201309</p>
+=======
+          <p>71B LIG, M.D.D.A Colony, GMS Road, Dehradun, Uttarakhand, India</p>
+>>>>>>> 176d453 (Update V1.5)
         </div>
       </section>
     </main>

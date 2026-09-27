@@ -3,15 +3,19 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { urlFor } from "../sanityStudio/lib/sanity";
+import { urlFor, getImageUrl } from "../sanityStudio/lib/sanity";
 import { FaMapMarkerAlt } from "react-icons/fa";
 import type { NewsItem } from "../types/content";
 
+<<<<<<< HEAD
 export default function StateTabs({ news }: { news: NewsItem[] }) {
+=======
+export default function StateTabs({ newsByState }: { newsByState: Record<string, NewsItem[]> }) {
+>>>>>>> 176d453 (Update V1.5)
   const [activeState, setActiveState] = useState("up");
 
-  // DEFINITION: What text should we look for in the database?
   const tabs = [
+<<<<<<< HEAD
     { 
       id: "up", 
       label: "Uttar Pradesh", 
@@ -52,6 +56,16 @@ export default function StateTabs({ news }: { news: NewsItem[] }) {
     const dbCategory = item.category ? item.category.toLowerCase() : "";
     return currentTab?.match.includes(dbCategory);
   }).slice(0, 4);
+=======
+    { id: "up", label: "Uttar Pradesh" },
+    { id: "uk", label: "Uttarakhand" },
+    { id: "delhi", label: "Delhi" },
+    { id: "national", label: "National" },
+    { id: "world", label: "World" },
+  ];
+
+  const filteredNews = (newsByState[activeState] || []).slice(0, 4);
+>>>>>>> 176d453 (Update V1.5)
 
   return (
     <section className="container mx-auto px-4 py-12">
@@ -91,16 +105,12 @@ export default function StateTabs({ news }: { news: NewsItem[] }) {
                 
                 {/* Image */}
                 <div className="relative h-52 w-full overflow-hidden bg-gray-200">
-                  {story.mainImage ? (
-                    <Image
-                      src={urlFor(story.mainImage).url()}
-                      alt={story.title}
-                      fill
-                      className="object-cover group-hover:scale-110 transition duration-700"
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center text-gray-400 text-xs">No Image</div>
-                  )}
+                  <Image
+                    src={getImageUrl(story.mainImage)}
+                    alt={story.title}
+                    fill
+                    className={story.mainImage ? "object-cover group-hover:scale-110 transition duration-700" : "object-contain p-8 opacity-60"}
+                  />
                   {/* Badge */}
                   <span className="absolute top-3 right-3 bg-black/50 backdrop-blur text-white text-[10px] font-bold px-2 py-1 rounded">
                      {story.category}

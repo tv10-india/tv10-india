@@ -19,7 +19,7 @@ export default function WebStories({ stories }: { stories: WebStory[] }) {
 
         {/* SCROLLABLE STRIP */}
         <div className="flex gap-4 overflow-x-auto scrollbar-hide pb-2">
-          
+
           {stories.map((story) => (
             <Link href={`/web-stories/${story._id}`} key={story._id}>
               <div className="flex-shrink-0 relative w-28 h-44 md:w-32 md:h-52 rounded-xl overflow-hidden cursor-pointer group border-2 border-transparent hover:border-tv10-gold transition-all">

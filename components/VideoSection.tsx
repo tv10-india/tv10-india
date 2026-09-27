@@ -1,8 +1,12 @@
 import Link from "next/link";
 import Image from "next/image";
-import { urlFor } from "../sanityStudio/lib/sanity";
+import { getImageUrl } from "../sanityStudio/lib/sanity";
 import { FaPlay, FaYoutube } from "react-icons/fa";
+<<<<<<< HEAD
 import type { NewsItem } from "../types/content";
+=======
+import type { NewsItem, YouTubeVideo } from "../types/content";
+>>>>>>> 176d453 (Update V1.5)
 
 // Helper to extract YouTube ID
 function getYouTubeId(url?: string) {
@@ -12,11 +16,17 @@ function getYouTubeId(url?: string) {
   return (match && match[2].length === 11) ? match[2] : null;
 }
 
+<<<<<<< HEAD
 export default function VideoSection({ news }: { news: NewsItem[] }) {
+=======
+export default function VideoSection({ news, youtubeVideos }: { news: NewsItem[]; youtubeVideos: YouTubeVideo[] }) {
+>>>>>>> 176d453 (Update V1.5)
   // 1. Filter only posts that have a YouTube URL
   const videoNews = news.filter((item) => item.youtubeUrl).slice(0, 4);
+  const channelVideos = youtubeVideos.slice(0, 4);
+  const videos = channelVideos.length > 0 ? channelVideos : videoNews;
 
-  if (videoNews.length === 0) return null;
+  if (videos.length === 0) return null;
 
   return (
     <section className="bg-black text-white py-12">
@@ -42,23 +52,27 @@ export default function VideoSection({ news }: { news: NewsItem[] }) {
 
           {/* LEFT: MAIN PLAYER (Takes 2 Columns) */}
           <div className="lg:col-span-2">
-            {videoNews[0] && (
+            {videos[0] && (
               <div className="w-full">
                 {/* The Player */}
                 <div className="aspect-video w-full bg-gray-900 rounded-xl overflow-hidden shadow-2xl border border-gray-800 mb-4">
                   <iframe
                     className="w-full h-full"
-                    src={`https://www.youtube.com/embed/${getYouTubeId(videoNews[0].youtubeUrl)}?rel=0`}
-                    title={videoNews[0].title}
+                    src={`https://www.youtube.com/embed/${"id" in videos[0] ? videos[0].id : getYouTubeId(videos[0].youtubeUrl)}?rel=0`}
+                    title={videos[0].title}
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowFullScreen
                   ></iframe>
                 </div>
                 {/* The Title */}
                 <h2 className="text-xl md:text-2xl font-bold leading-tight hover:text-red-500 transition cursor-pointer">
-                  <Link href={`/news/${videoNews[0].slug.current}`}>
-                    {videoNews[0].title}
-                  </Link>
+                  {"id" in videos[0] ? (
+                    <a href={`https://www.youtube.com/watch?v=${videos[0].id}`} target="_blank" rel="noreferrer">
+                      {videos[0].title}
+                    </a>
+                  ) : (
+                    <Link href={`/news/${videos[0].slug.current}`}>{videos[0].title}</Link>
+                  )}
                 </h2>
               </div>
             )}
@@ -66,19 +80,19 @@ export default function VideoSection({ news }: { news: NewsItem[] }) {
 
           {/* RIGHT: PLAYLIST (Takes 1 Column) */}
           <div className="flex flex-col gap-4 h-full">
-            {videoNews.slice(1, 4).map((video) => (
-              <Link href={`/news/${video.slug.current}`} key={video.slug.current} className="flex gap-3 group bg-gray-900 p-3 rounded-lg border border-gray-800 hover:border-red-600 transition">
+            {videos.slice(1, 4).map((video) => {
+              const isChannelVideo = "id" in video;
+              const videoHref = isChannelVideo ? `https://www.youtube.com/watch?v=${video.id}` : `/news/${video.slug.current}`;
+              return <a href={videoHref} target={isChannelVideo ? "_blank" : undefined} rel={isChannelVideo ? "noreferrer" : undefined} key={isChannelVideo ? video.id : video.slug.current} className="flex gap-3 group bg-gray-900 p-3 rounded-lg border border-gray-800 hover:border-red-600 transition">
                 
                 {/* Thumbnail */}
                 <div className="relative w-32 h-20 flex-shrink-0 rounded overflow-hidden">
-                  {video.mainImage && (
-                    <Image 
-                      src={urlFor(video.mainImage).url()} 
-                      alt={video.title} 
-                      fill 
-                      className="object-cover group-hover:scale-110 transition" 
-                    />
-                  )}
+                  <Image 
+                    src={isChannelVideo ? video.thumbnailUrl : getImageUrl(video.mainImage)} 
+                    alt={video.title} 
+                    fill 
+                    className={isChannelVideo || video.mainImage ? "object-cover group-hover:scale-110 transition" : "object-contain p-3 opacity-60"} 
+                  />
                   {/* Tiny Play Icon Overlay */}
                   <div className="absolute inset-0 flex items-center justify-center bg-black/40 group-hover:bg-transparent transition">
                     <FaPlay className="text-white text-xs drop-shadow-md" />
@@ -93,8 +107,8 @@ export default function VideoSection({ news }: { news: NewsItem[] }) {
                    <p className="text-[10px] text-gray-500 mt-1 uppercase">Watch Now</p>
                 </div>
 
-              </Link>
-            ))}
+              </a>;
+            })}
           </div>
 
         </div>

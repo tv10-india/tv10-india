@@ -5,6 +5,7 @@ import {visionTool} from '@sanity/vision'
 import {apiVersion, dataset, projectId} from './env'
 import {schema} from './schemaTypes'    // <--- use `schema` (matches your file)
 import {structure} from './structure'
+import {resolveDocumentActions} from './actions'
 
 export default defineConfig({
   name: 'default',
@@ -18,6 +19,10 @@ export default defineConfig({
     structureTool({ structure }),
     visionTool({ defaultApiVersion: apiVersion })
   ],
+
+  document: {
+    actions: resolveDocumentActions,
+  },
 
   // `schema` already has shape { types: SchemaTypeDefinition[] }
   schema,

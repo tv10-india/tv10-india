@@ -1,14 +1,26 @@
-import { client, urlFor } from "../../sanityStudio/lib/sanity";
+import { client, getImageUrl } from "../../sanityStudio/lib/sanity";
+import { Fragment } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import Header, { Headline } from "@/components/Header";
 import { notFound } from "next/navigation";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
+import type { Metadata } from "next";
+import { CATEGORY_SLUG_TO_CODE, categoryHeading } from "@/lib/categories";
+import { SITE_URL } from "@/lib/site";
+import { LIVE_POST_FILTER, LIVE_POST_ORDER } from "@/lib/posts";
+import AdSlot from "@/components/AdSlot";
+import AdBanner from "@/components/AdBanner";
+
+export const revalidate = 60;
+
+const siteUrl = SITE_URL;
 
 export const revalidate = 60;
 
 const POSTS_PER_PAGE = 9;
 
+<<<<<<< HEAD
 const categoryMap: { [key: string]: string } = {
   "uttar-pradesh": "up",
   "uttarakhand": "uk",
@@ -20,6 +32,21 @@ const categoryMap: { [key: string]: string } = {
   "sports": "sports",
   "videos": "videos"
 };
+=======
+/**
+ * How many article cards precede the in-feed ad.
+ *
+ * Three is one full row on desktop, so the unit starts the second row rather
+ * than interrupting the first. It is only rendered when more cards follow it —
+ * an in-feed ad at the end of the feed is just a banner.
+ */
+const IN_FEED_AFTER_CARDS = 3;
+
+const categoryMap = CATEGORY_SLUG_TO_CODE;
+
+// National combines every state category into one feed
+const NATIONAL_CODES = ["up", "uk", "delhi", "national"];
+>>>>>>> 176d453 (Update V1.5)
 
 // National combines every state category into one feed
 const NATIONAL_CODES = ["up", "uk", "delhi", "national"];
@@ -35,10 +62,17 @@ async function getCategoryNews(category: string, page: number) {
 
   const query = `
     {
+<<<<<<< HEAD
       "posts": *[_type == "post" && ${filter}] | order(publishedAt desc) [$start...$end] {
         title, slug, mainImage, publishedAt, category
       },
       "total": count(*[_type == "post" && ${filter}])
+=======
+      "posts": *[${LIVE_POST_FILTER} && ${filter}] | ${LIVE_POST_ORDER} [$start...$end] {
+        title, slug, mainImage, publishedAt, category, isBreaking
+      },
+      "total": count(*[${LIVE_POST_FILTER} && ${filter}])
+>>>>>>> 176d453 (Update V1.5)
     }
   `;
   return client.fetch(query, { dbCode, dbCodes: NATIONAL_CODES, start, end });
@@ -47,6 +81,20 @@ async function getCategoryNews(category: string, page: number) {
 type Props = {
   params: Promise<{ category: string }>;
   searchParams: Promise<{ page?: string }>;
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { category } = await params;
+  if (!categoryMap[category]) return { title: "Not Found" };
+
+  const title = categoryHeading(categoryMap[category]);
+  const url = `${siteUrl}/${category}`;
+
+  return {
+    title,
+    alternates: { canonical: url },
+    openGraph: { title, url, type: "website" },
+  };
 }
 
 export default async function CategoryPage({ params, searchParams }: Props) {
@@ -86,34 +134,44 @@ export default async function CategoryPage({ params, searchParams }: Props) {
         {/* PAGE TITLE (Centered) */}
         <div className="flex flex-col items-center mb-10 border-b-4 border-tv10-red pb-4 max-w-2xl mx-auto text-center">
           <h1 className="text-4xl md:text-5xl font-black uppercase text-tv10-metal dark:text-white tracking-tighter mb-2">
+<<<<<<< HEAD
             {categoryName.replace(/-/g, ' ')} News
+=======
+            {categoryHeading(categoryMap[categoryName])}
+>>>>>>> 176d453 (Update V1.5)
           </h1>
           <span className="text-sm text-gray-500 font-bold bg-gray-200 dark:bg-gray-800 px-3 py-1 rounded-full">
             Page {currentPage} of {totalPages}
           </span>
         </div>
 
+        {/* A booking targeting this category (or running site-wide) wins;
+            otherwise the "all" AdSense unit fills the slot. */}
+        <AdSlot slot="category-top" category={categoryMap[categoryName]} adUnit="all" />
+
         {/* PREMIUM NEWS GRID (Centered Items) */}
         {posts.length > 0 ? (
           <>
             {/* Added 'justify-center' to center the whole grid if few items exist */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-center">
+<<<<<<< HEAD
               {posts.map((story: CategoryPost) => (
                 <Link href={`/news/${story.slug?.current || ""}`} key={story.slug?.current || story.title} className="group h-full max-w-md mx-auto w-full">
+=======
+              {posts.map((story: CategoryPost, index: number) => (
+                <Fragment key={story.slug?.current || story.title}>
+                  <Link href={`/news/${story.slug?.current || ""}`} className="group h-full max-w-md mx-auto w-full">
+>>>>>>> 176d453 (Update V1.5)
                   <div className="bg-white dark:bg-tv10-metal rounded-2xl shadow-md border border-gray-100 dark:border-gray-700 overflow-hidden hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 h-full flex flex-col">
                     
                     {/* Image Container */}
                     <div className="relative w-full aspect-video overflow-hidden bg-gray-200">
-                      {story.mainImage ? (
-                        <Image
-                          src={urlFor(story.mainImage).url()}
-                          alt={story.title}
-                          fill
-                          className="object-cover group-hover:scale-105 transition duration-700"
-                        />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center text-gray-400">No Image</div>
-                      )}
+                      <Image
+                        src={getImageUrl(story.mainImage)}
+                        alt={story.title}
+                        fill
+                        className={story.mainImage ? "object-cover group-hover:scale-105 transition duration-700" : "object-contain p-8 opacity-60"}
+                      />
                       <span className="absolute bottom-2 right-2 bg-tv10-red text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase shadow-lg">
                         {story.category}
                       </span>
@@ -142,7 +200,19 @@ export default async function CategoryPage({ params, searchParams }: Props) {
                     </div>
 
                   </div>
-                </Link>
+                  </Link>
+
+                  {/* The in-feed unit is a grid item, like the cards around it
+                      — that is the layout this format is built for. `self-start`
+                      keeps it out of the row's default stretch so its height
+                      stays free; a fixed-height container is exactly what
+                      distorts a fluid unit. */}
+                  {index === IN_FEED_AFTER_CARDS - 1 && posts.length > IN_FEED_AFTER_CARDS && (
+                    <div className="self-start max-w-md mx-auto w-full">
+                      <AdBanner unit="inFeed" />
+                    </div>
+                  )}
+                </Fragment>
               ))}
             </div>
 

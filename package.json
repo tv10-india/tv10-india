@@ -2,16 +2,29 @@
   "name": "tv10-india",
   "version": "0.1.0",
   "private": true,
+  "comment": "sanityStudio is a workspace so its dependencies hoist to the root node_modules. A separate install there produces a second physical copy of `sanity` and `@sanity/client`, and two copies mean two type identities (breaking `next build` at sanity.config.ts) and two React contexts (breaking /studio at runtime). Both have happened.",
+  "workspaces": [
+    "sanityStudio"
+  ],
   "scripts": {
     "dev": "next dev --webpack",
+<<<<<<< HEAD
     "build": "next build",
+=======
+    "build": "next build --webpack",
+>>>>>>> 176d453 (Update V1.5)
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest --coverage",
+    "studio:deploy": "npm run deploy --workspace sanityStudio"
   },
   "dependencies": {
     "@portabletext/react": "^5.0.0",
     "@sanity/image-url": "^1.2.0",
-    "@sanity/vision": "^4.20.3",
+    "@sanity/ui": "^3.1.11",
+    "@sanity/vision": "^4.22.1",
     "classnames": "^2.5.1",
     "date-fns": "^4.1.0",
     "html2canvas": "^1.4.1",
@@ -20,20 +33,29 @@
     "react": "19.2.0",
     "react-dom": "19.2.0",
     "react-icons": "^5.5.0",
+<<<<<<< HEAD
     "sanity": "^4.20.3",
+=======
+    "sanity": "^4.22.1",
+>>>>>>> 176d453 (Update V1.5)
     "styled-components": "^6.1.19",
     "transliteration": "^2.6.1"
   },
   "devDependencies": {
+    "@sanity/client": "^7.27.0",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@vitest/ui": "^2.1.8",
     "autoprefixer": "^10.4.22",
+    "cheerio": "^1.2.0",
     "eslint": "^9",
     "eslint-config-next": "16.0.7",
+    "fast-xml-parser": "^5.11.1",
     "postcss": "^8.5.6",
     "tailwindcss": "^3.4.18",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^2.1.8"
   }
 }

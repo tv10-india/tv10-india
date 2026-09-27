@@ -68,12 +68,20 @@ img {
   align-items: center;
   white-space: nowrap;
   min-width: max-content;
+<<<<<<< HEAD
   animation: tickerScroll 70s linear infinite;
+=======
+  animation: tickerScroll 110s linear infinite;
+>>>>>>> 176d453 (Update V1.5)
 }
 
 @media (max-width: 768px) {
   .ticker-track {
+<<<<<<< HEAD
     animation-duration: 45s;
+=======
+    animation-duration: 70s;
+>>>>>>> 176d453 (Update V1.5)
   }
 }
 
@@ -94,6 +102,26 @@ img {
   }
 }
 
+<<<<<<< HEAD
+=======
+/* REFUSE AUTO-PLACED ADS IN THE HEADER
+   AdSense "Auto ads" injects <ins class="adsbygoogle google-auto-placed"> into
+   any wide block container it likes, ignoring where we actually put ad slots.
+   The breaking-news ticker is a flex row, so an injected ad lands as a sibling
+   of the "Latest" pill and stretches the gold bar to the full height of the ad
+   — burying the headlines and shoving the whole page down.
+
+   Every ad on this site is placed deliberately through <AdSlot>/<AdBanner>.
+   The header is not an ad surface, so nothing auto-placed is allowed inside it.
+   This is a guard, not the cure: the real fix is turning Auto ads off in the
+   AdSense dashboard, since it also injects overlays and vignettes this cannot
+   reach. Scoped to <header> so it can never hide a real <AdSlot> in the page. */
+header .google-auto-placed,
+header ins.adsbygoogle {
+  display: none !important;
+}
+
+>>>>>>> 176d453 (Update V1.5)
 /* HIDE GOOGLE TRANSLATE BANNER */
 .skiptranslate {
   display: none !important;

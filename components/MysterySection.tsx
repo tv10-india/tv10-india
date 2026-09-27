@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { urlFor } from "../sanityStudio/lib/sanity";
+import { urlFor, getImageUrl } from "../sanityStudio/lib/sanity";
 import { FaEye } from "react-icons/fa";
 import type { NewsItem } from "../types/content";
 
@@ -43,16 +43,12 @@ export default function MysterySection({ news }: { news: NewsItem[] }) {
                   
                   {/* 1. IMAGE AREA (Fixed 16:9 Ratio) */}
                   <div className="relative w-full aspect-video overflow-hidden">
-                     {story.mainImage ? (
-                       <Image 
-                         src={urlFor(story.mainImage).url()} 
-                         alt={story.title} 
-                         fill 
-                         className="object-cover opacity-90 group-hover:scale-110 transition duration-700 grayscale group-hover:grayscale-0" 
-                       />
-                     ) : (
-                        <div className="w-full h-full bg-gray-900"></div>
-                     )}
+                     <Image 
+                       src={getImageUrl(story.mainImage)} 
+                       alt={story.title} 
+                       fill 
+                       className={story.mainImage ? "object-cover opacity-90 group-hover:scale-110 transition duration-700 grayscale group-hover:grayscale-0" : "object-contain p-10 opacity-40"} 
+                     />
                      
                      {/* Overlay Badge */}
                      <div className="absolute top-3 left-3 bg-purple-600 text-white text-[10px] font-bold px-3 py-1 rounded-full shadow-[0_0_10px_#9333ea] z-10">

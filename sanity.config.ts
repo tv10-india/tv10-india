@@ -12,6 +12,7 @@ import {structureTool, type StructureResolver} from 'sanity/structure'
 import {apiVersion, dataset, projectId} from './sanityStudio/env'
 import {schema} from './sanityStudio/schemaTypes'
 import {structure} from './sanityStudio/structure'
+import {resolveDocumentActions} from './sanityStudio/actions'
 
 export default defineConfig({
   basePath: '/studio',
@@ -25,4 +26,10 @@ export default defineConfig({
     // https://www.sanity.io/docs/the-vision-plugin
     visionTool({defaultApiVersion: apiVersion}),
   ],
+  // This is the config `/studio` actually mounts, so the editorial workflow has
+  // to be registered here. It shares one resolver with the CLI config rather
+  // than repeating the list — see sanityStudio/actions/index.ts.
+  document: {
+    actions: resolveDocumentActions,
+  },
 })

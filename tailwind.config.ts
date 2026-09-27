@@ -40,4 +40,8 @@ const config: Config = {
   },
   plugins: [],
 };
+<<<<<<< HEAD
 export default config;
+=======
+export default config;
+>>>>>>> 176d453 (Update V1.5)

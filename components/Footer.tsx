@@ -64,6 +64,9 @@ export default function Footer() {
               <li><Link href="/dharma" className="hover:text-tv10-gold transition">Dharma & Sanskriti</Link></li>
               <li><Link href="/business" className="hover:text-tv10-gold transition">Business & Tech</Link></li>
               <li><Link href="/sports" className="hover:text-tv10-gold transition">Sports</Link></li>
+              <li><Link href="/lifestyle" className="hover:text-tv10-gold transition">Lifestyle</Link></li>
+              <li><Link href="/entertainment" className="hover:text-tv10-gold transition">Entertainment</Link></li>
+              <li><Link href="/web-stories" className="hover:text-tv10-gold transition">Web Stories</Link></li>
             </ul>
           </div>
 
@@ -85,7 +88,11 @@ export default function Footer() {
             <ul className="space-y-4 text-sm">
               <li className="flex items-start gap-3">
                 <FaMapMarkerAlt className="text-tv10-red mt-1" />
+<<<<<<< HEAD
                 <span>Noida Sector 62, Uttar Pradesh,<br />India - 201309</span>
+=======
+                <span>71B LIG, M.D.D.A Colony, GMS Road,<br />Dehradun, Uttarakhand, India</span>
+>>>>>>> 176d453 (Update V1.5)
               </li>
               <li className="flex items-center gap-3">
                 <FaEnvelope className="text-tv10-red" />

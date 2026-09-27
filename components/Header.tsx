@@ -75,7 +75,11 @@ export default function Header({ initialHeadlines = [] }: HeaderProps): React.Re
     }
   };
 
+<<<<<<< HEAD
   const menuItems = ['HOME', 'UTTAR PRADESH', 'UTTARAKHAND', 'DELHI', 'NATIONAL', 'WORLD', 'DHARMA', 'BUSINESS', 'SPORTS', 'VIDEOS', 'WEB STORIES'];
+=======
+  const menuItems = ['HOME', 'UTTAR PRADESH', 'UTTARAKHAND', 'DELHI', 'NATIONAL', 'WORLD', 'DHARMA', 'BUSINESS', 'SPORTS', 'VIDEOS'];
+>>>>>>> 176d453 (Update V1.5)
 
   return (
     <header className="sticky top-0 z-50 shadow-2xl">
@@ -178,6 +182,7 @@ export default function Header({ initialHeadlines = [] }: HeaderProps): React.Re
 
       {/* NAVIGATION */}
       <nav className={`bg-gradient-to-r from-gray-900 via-tv10-metal to-gray-900 text-white font-semibold text-sm ${menuOpen ? 'block' : 'hidden md:block'} border-t-4 border-tv10-red`}>
+<<<<<<< HEAD
         <ul className="container mx-auto flex flex-col md:flex-row md:flex-wrap md:justify-center">
           {menuItems.map((item) => {
             const linkUrl = item === 'HOME' ? '/' : `/${item.toLowerCase().replace(/ /g, '-')}`;
@@ -187,6 +192,34 @@ export default function Header({ initialHeadlines = [] }: HeaderProps): React.Re
                   href={linkUrl}
                   onClick={() => setMenuOpen(false)}
                   className="block py-2.5 px-3 md:px-4 hover:bg-tv10-red/90 transition-all uppercase tracking-wider text-center text-xs md:text-[12px] font-bold whitespace-nowrap"
+=======
+        {/* One row on desktop, always. `flex-nowrap` is the fix for the section
+            that used to wrap onto a line of its own: a single orphaned item
+            reads as a mistake rather than as a menu. When the sections are
+            wider than the viewport the row scrolls sideways instead, with the
+            scrollbar hidden (.scrollbar-hide, globals.css).
+
+            Centred with auto margins on the end items rather than
+            `justify-center`, because a centred flex row that overflows pushes
+            its first item off the left edge where it cannot be scrolled back
+            to. Auto margins collapse to zero when there is no spare room, so
+            the row stays reachable at every width.
+
+            Mobile is deliberately untouched — there this same <ul> is the
+            stacked hamburger panel, which should remain a column. */}
+        <ul className="container mx-auto flex flex-col md:flex-row md:flex-nowrap md:overflow-x-auto scrollbar-hide">
+          {menuItems.map((item, index) => {
+            const linkUrl = item === 'HOME' ? '/' : `/${item.toLowerCase().replace(/ /g, '-')}`;
+            return (
+              <li
+                key={item}
+                className={`md:shrink-0${index === 0 ? ' md:ml-auto' : ''}${index === menuItems.length - 1 ? ' md:mr-auto' : ''}`}
+              >
+                <Link
+                  href={linkUrl}
+                  onClick={() => setMenuOpen(false)}
+                  className="block py-2.5 px-3 md:px-2.5 lg:px-3 xl:px-4 hover:bg-tv10-red/90 transition-all uppercase text-center text-xs md:text-[11px] lg:text-[12px] tracking-wider md:tracking-wide lg:tracking-wider font-bold whitespace-nowrap"
+>>>>>>> 176d453 (Update V1.5)
                 >
                   {item}
                 </Link>

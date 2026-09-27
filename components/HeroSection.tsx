@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
-import { urlFor } from "../sanityStudio/lib/sanity";
+import { urlFor, getImageUrl } from "../sanityStudio/lib/sanity";
+import BreakingBadge from "./BreakingBadge";
 import { FaPlay, FaClock, FaBolt } from "react-icons/fa";
 import type { NewsItem } from "../types/content";
 
@@ -28,14 +29,12 @@ export default function HeroSection({ news }: { news: NewsItem[] }) {
           <Link href={`/news/${mainStory.slug.current}`}>
             <div className="relative w-full aspect-video rounded-2xl overflow-hidden shadow-2xl">
               {/* Image with Zoom Effect */}
-              {mainStory.mainImage && (
-                <Image
-                  src={urlFor(mainStory.mainImage).url()}
-                  alt={mainStory.title}
-                  fill
-                  className="object-cover group-hover:scale-105 transition-transform duration-700"
-                />
-              )}
+              <Image
+                src={getImageUrl(mainStory.mainImage)}
+                alt={mainStory.title}
+                fill
+                className={mainStory.mainImage ? "object-cover group-hover:scale-105 transition-transform duration-700" : "object-contain p-16 opacity-60"}
+              />
               
               {/* Premium Gradient Overlay */}
               <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-90" />
@@ -49,9 +48,12 @@ export default function HeroSection({ news }: { news: NewsItem[] }) {
 
               {/* Text Content */}
               <div className="absolute bottom-0 left-0 p-6 md:p-8 w-full">
-                <span className="inline-block bg-tv10-gold text-black text-[10px] font-bold px-3 py-1 rounded-full uppercase mb-3 shadow-sm">
-                  {mainStory.category || "Breaking"}
-                </span>
+                <div className="flex flex-wrap items-center gap-2 mb-3">
+                  {mainStory.isBreaking && <BreakingBadge />}
+                  <span className="inline-block bg-tv10-gold text-black text-[10px] font-bold px-3 py-1 rounded-full uppercase shadow-sm">
+                    {mainStory.category || "Breaking"}
+                  </span>
+                </div>
                 <h1 className="text-2xl md:text-4xl font-extrabold text-white leading-tight drop-shadow-lg mb-2">
                   {mainStory.title}
                 </h1>
@@ -71,14 +73,12 @@ export default function HeroSection({ news }: { news: NewsItem[] }) {
                 
                 {/* Thumbnail (Fixed Size) */}
                 <div className="relative w-24 h-24 md:w-32 md:h-20 flex-shrink-0 rounded-lg overflow-hidden shadow-sm">
-                  {story.mainImage && (
-                    <Image
-                      src={urlFor(story.mainImage).url()}
-                      alt={story.title}
-                      fill
-                      className="object-cover"
-                    />
-                  )}
+                  <Image
+                    src={getImageUrl(story.mainImage)}
+                    alt={story.title}
+                    fill
+                    className={story.mainImage ? "object-cover" : "object-contain p-2 opacity-60"}
+                  />
                   {story.youtubeUrl && (
                     <div className="absolute inset-0 flex items-center justify-center bg-black/30">
                       <FaPlay className="text-white text-xs" />
@@ -91,8 +91,11 @@ export default function HeroSection({ news }: { news: NewsItem[] }) {
                    <h3 className="text-sm md:text-base font-bold text-gray-900 dark:text-white leading-snug group-hover:text-tv10-red line-clamp-2">
                      {story.title}
                    </h3>
-                   <span className="text-[10px] font-bold text-gray-500 mt-2 uppercase flex items-center gap-1">
-                     <FaBolt className="text-tv10-gold" /> {story.category}
+                   <span className="text-[10px] font-bold mt-2 uppercase flex items-center gap-1">
+                     <FaBolt className={story.isBreaking ? "text-tv10-red" : "text-tv10-gold"} />
+                     <span className={story.isBreaking ? "text-tv10-red" : "text-gray-500"}>
+                       {story.isBreaking ? "Breaking" : story.category}
+                     </span>
                    </span>
                 </div>
 
