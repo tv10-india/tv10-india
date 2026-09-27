@@ -7,20 +7,6 @@ import DharmaSection from "@/components/DharmaSection";
 import VideoSection from "@/components/VideoSection";
 import MysterySection from "@/components/MysterySection";
 import CategoryNewsSection from "@/components/CategoryNewsSection";
-<<<<<<< HEAD
-import type { NewsItem, WebStory } from "../types/content";
-
-async function getData() {
-  const query = `{
-    "news": *[_type == "post"] | order(publishedAt desc) [0...50] {
-      _id,
-      title,
-      slug,
-      category,
-      mainImage,
-      youtubeUrl,
-      publishedAt
-=======
 import AdSlot from "@/components/AdSlot";
 import { LIVE_POST_FILTER, LIVE_POST_ORDER, POST_CARD_PROJECTION } from "@/lib/posts";
 import type { NewsItem, WebStory, YouTubeVideo } from "../types/content";
@@ -69,30 +55,10 @@ async function getData() {
   const query = `{
     "news": *[${LIVE_POST_FILTER}] | ${LIVE_POST_ORDER} {
       ${POST_CARD_PROJECTION}
->>>>>>> 176d453 (Update V1.5)
     },
     "stories": *[_type == "webStory"] | order(_createdAt desc) [0...6] {
       _id, title, slides
     },
-<<<<<<< HEAD
-    "dharma": *[_type == "post" && category == "dharma"] | order(publishedAt desc) [0...4] {
-      _id, title, slug, category, mainImage, youtubeUrl, publishedAt
-    },
-    "business": *[_type == "post" && category == "business"] | order(publishedAt desc) [0...4] {
-      _id, title, slug, category, mainImage, youtubeUrl, publishedAt
-    },
-    "sports": *[_type == "post" && category == "sports"] | order(publishedAt desc) [0...4] {
-      _id, title, slug, category, mainImage, youtubeUrl, publishedAt
-    },
-    "world": *[_type == "post" && category == "world"] | order(publishedAt desc) [0...4] {
-      _id, title, slug, category, mainImage, youtubeUrl, publishedAt
-    },
-    "videos": *[_type == "post" && defined(youtubeUrl)] | order(publishedAt desc) [0...4] {
-      _id, title, slug, category, mainImage, youtubeUrl, publishedAt
-    },
-    "mystery": *[_type == "post" && category == "mystery"] | order(publishedAt desc) [0...3] {
-      _id, title, slug, category, mainImage, youtubeUrl, publishedAt
-=======
     "dharma": *[${LIVE_POST_FILTER} && category == "dharma"] | ${LIVE_POST_ORDER} [0...4] {
       ${POST_CARD_PROJECTION}
     },
@@ -131,7 +97,6 @@ async function getData() {
     },
     "stateNational": *[${LIVE_POST_FILTER} && category in ["up", "uk", "delhi", "national"]] | ${LIVE_POST_ORDER} [0...8] {
       ${POST_CARD_PROJECTION}
->>>>>>> 176d453 (Update V1.5)
     }
   }`;
 
@@ -142,10 +107,6 @@ async function getData() {
     business: NewsItem[];
     sports: NewsItem[];
     world: NewsItem[];
-<<<<<<< HEAD
-    videos: NewsItem[];
-    mystery: NewsItem[];
-=======
     lifestyle: NewsItem[];
     entertainment: NewsItem[];
     webStories: NewsItem[];
@@ -155,19 +116,14 @@ async function getData() {
     stateUk: NewsItem[];
     stateDelhi: NewsItem[];
     stateNational: NewsItem[];
->>>>>>> 176d453 (Update V1.5)
   }>(query, {}, { next: { revalidate: 60 } });
 }
 
 export default async function Home() {
-<<<<<<< HEAD
-  const { news, stories, dharma, business, sports, world, videos, mystery } = await getData();
-=======
   const [{ news, stories, dharma, business, sports, world, lifestyle, entertainment, webStories, videos, mystery, stateUp, stateUk, stateDelhi, stateNational }, youtubeVideos] = await Promise.all([
     getData(),
     getYouTubeVideos(),
   ]);
->>>>>>> 176d453 (Update V1.5)
 
   // Extract headlines for header ticker
   const headlines: Headline[] = (news || []).slice(0, 10).map((item: NewsItem) => ({
@@ -185,22 +141,6 @@ export default async function Home() {
       {/* 2. HERO NEWS (Shows #1 Story Big + Next 4 on side) */}
       <HeroSection news={news} />
 
-<<<<<<< HEAD
-      {/* 3. STATE TABS (Filters the full latest-first feed for each region) */}
-      <StateTabs news={news} />
-
-      <DharmaSection news={dharma} />
-
-      <CategoryNewsSection news={business} category="business" />
-
-      <CategoryNewsSection news={sports} category="sports" />
-
-      <CategoryNewsSection news={world} category="world" />
-
-      <VideoSection news={videos} />
-
-      <MysterySection news={mystery} />
-=======
       {/* Direct bookings take precedence; the "all" AdSense unit fills these
           three when none is running. AdBanner removes itself when AdSense
           reports the slot unfilled, so an unsold placement still collapses
@@ -237,7 +177,6 @@ export default async function Home() {
       <div className="container mx-auto px-4">
         <AdSlot slot="footer" adUnit="all" />
       </div>
->>>>>>> 176d453 (Update V1.5)
 
     </main>
   );
